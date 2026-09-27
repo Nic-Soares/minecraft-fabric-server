@@ -1,0 +1,116 @@
+# Versionamento
+
+O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo ou que o jogo gera fica fora. O mundo não vai para o Git; ele é salvo pelo `backup.sh` em `backups/`.
+
+## O que é versionado
+
+| Caminho | Conteúdo |
+|---|---|
+| `versions.env` | Versões fixadas do JDK, do jogo, do loader e do installer |
+| `mods.txt` | Intenção: slugs do Modrinth |
+| `mods.lock` | Resolvido: versão exata, arquivo, sha512 e url de cada mod |
+| `server/server.properties.base` | Config do servidor, sem segredos |
+| `server/config/` | Configs geradas pelos mods (Lithium, C2ME, spark...) |
+| `server/whitelist.json`, `server/ops.json` | Acesso ao servidor |
+| `scripts/` | `start.sh`, `mods.sh`, `rcon.py`, `backup.sh`, `.env.example` |
+| `local.minecraft-fabric-server.plist` | Job do launchd |
+| `.githooks/pre-commit` | Barreira contra segredos e binários |
+| `ARCHITETURE.html`, `GIT.md` | Documentação |
+
+## O que fica fora
+
+| Caminho | Motivo |
+|---|---|
+| `scripts/.env` | Senhas (`RCON_PASS`, `MGMT_SECRET`) |
+| `server/server.properties` | Gerado a cada boot pelo `start.sh`; o servidor reescreve o arquivo |
+| `server/*.jar`, `server/libraries/`, `server/versions/`, `server/.fabric/` | Recriados pelo Fabric Installer a partir do `versions.env` |
+| `server/mods/` | Recriado pelo `mods.sh sync` a partir do `mods.lock` |
+| `server/world/`, `server/logs/`, `server/usercache.json` | Estado e runtime |
+| `backups/` | Binários grandes (`.tar.zst`) |
+
+O `.gitignore` ignora `server/*` inteiro e abre exceções explícitas. Um arquivo novo que o servidor criar fica fora do Git até alguém decidir que ele é configuração.
+
+## Versões fixadas
+
+```bash
+JAVA_VERSION=25
+MC_VERSION=26.3
+LOADER_VERSION=0.19.5
+INSTALLER_VERSION=1.1.2
+```
+
+Os scripts leem só este arquivo. Subir de versão do jogo vira um diff pequeno e revisável.
+
+## Mods: intenção e lock
+
+O modelo é o mesmo de `package.json` e `package-lock.json`.
+
+| Comando | O que faz | Rede |
+|---|---|---|
+| `scripts/mods.sh update` | Resolve a última build de cada slug para `MC_VERSION` e reescreve o `mods.lock` | Modrinth API |
+| `scripts/mods.sh sync` | Apaga `server/mods/`, baixa o que está no lock e verifica o sha512 | Só as URLs do lock |
+
+Formato do `mods.lock` (TSV, ordenado por slug):
+
+```
+slug	version_id	filename	sha512	url
+```
+
+Fluxo de update:
+
+1. `scripts/mods.sh update`
+2. `git diff mods.lock` para revisar o que mudou
+3. `scripts/mods.sh sync` e teste o servidor
+4. Commit: `mods: lithium 0.26.1 -> 0.26.2`
+
+Rollback: `git revert <commit>` + `scripts/mods.sh sync`.
+
+## Segredos
+
+- A config versionada é o `server/server.properties.base`, sem `rcon.password` e sem `management-server-secret`.
+- O `start.sh` junta o base com os valores do `scripts/.env` e grava o `server.properties` real antes de iniciar a JVM.
+- O `scripts/.env.example` documenta as variáveis; o `.env` real tem permissão 600 e nunca é commitado.
+- O hook `.githooks/pre-commit` bloqueia:
+  - arquivos `.jar`, `.zst`, `.mca`, `.dat` e `.env`
+  - qualquer linha adicionada com valor em `rcon.password`, `management-server-secret`, `RCON_PASS` ou `MGMT_SECRET`
+
+O hook fica ativo pelo `git config core.hooksPath .githooks`. Essa config é local: depois de clonar em outra máquina, rode o comando de novo.
+
+## Fluxo de branches
+
+| Branch | Papel | Deriva de | Entra em |
+|---|---|---|---|
+| `main` | Produção: o que roda no servidor que você joga | nenhuma | nenhuma |
+| `development` | Integração e testes | `main` (uma vez, no início) | `main` |
+| `feature/<nome>` | Uma mudança: mod novo, flag da JVM, script | `development` | `development` |
+| `fix/<nome>` | Correção | `development` | `development` |
+
+Ciclo de uma mudança:
+
+1. `git switch development && git pull`
+2. `git switch -c feature/adicionar-distant-horizons`
+3. Mude, teste com `scripts/start.sh` e faça commit
+4. Pull request `feature/...` para `development` e merge
+5. Teste a `development` rodando de verdade por um tempo
+6. Pull request `development` para `main`, merge e tag, se for uma versão nova do jogo
+
+Nunca faça commit direto na `main`. No GitHub, proteja a `main` (Settings, Branches, exigir pull request) e deixe a `development` como branch padrão, para os PRs já abrirem contra ela.
+
+## Convenções
+
+- **Commits por escopo:** `mods:`, `jvm:`, `config:`, `scripts:`, `docs:`, `git:`.
+- **Tags por versão do jogo:** `mc-26.3`. Quando sair o 26.4, `git checkout mc-26.3` + `mods.sh sync` volta ao último estado que funcionava.
+- **Backups ligados ao commit:** o `backup.sh` usa o hash curto no nome do arquivo, por exemplo `world-2026-09-27-1530-a1b2c3d.tar.zst`, para saber com qual stack aquele mundo rodava.
+
+## Recriar o servidor do zero
+
+```bash
+git clone git@github.com:<usuario>/<repo>.git ~/Servers/minecraft
+cd ~/Servers/minecraft
+git config core.hooksPath .githooks
+cp scripts/.env.example scripts/.env && chmod 600 scripts/.env
+scripts/install.sh
+scripts/mods.sh sync
+```
+
+Depois é só restaurar um `backups/*.tar.zst` em `server/world/`. O `install.sh` lê o `versions.env` e roda o Fabric Installer.

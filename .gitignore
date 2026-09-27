@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# segredos locais (o modelo versionado é scripts/.env.example)
+.env
+scripts/.env
+
+# snapshots do mundo: binários grandes, ficam fora do Git
+backups/
+
+# runtime do servidor: tudo ignorado, exceto o que descreve a configuração
+server/*
+!server/server.properties.base
+!server/config/
+!server/whitelist.json
+!server/ops.json
+
+# Python
+__pycache__/
+server/config/spark/tmp/

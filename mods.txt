@@ -1,0 +1,8 @@
+# Intenção: um slug do Modrinth por linha. O resolvido fica em mods.lock.
+fabric-api
+lithium
+ferrite-core
+c2me-fabric
+scalablelux
+spark
+chunky
