@@ -1,6 +1,8 @@
-# minecraft-fabric-server
+# spawnpoint
 
-Dedicated Minecraft Java 26.3 server with Fabric, running natively on macOS (Apple Silicon), with server-side-only performance mods and friends joining through Tailscale, without opening ports on the router.
+Self-hosted game servers with, in the future, a web panel to start and stop them and to manage players, backups and mods.
+
+Today it runs one dedicated Minecraft Java 26.3 server with Fabric, natively on macOS (Apple Silicon), with server-side-only performance mods and friends joining through Tailscale, without opening ports on the router. Terraria support and the web panel are planned.
 
 ## Documentation
 
