@@ -67,7 +67,7 @@ Crashes geram um relatório separado em `~/Servers/minecraft/server/crash-report
 | Dar operador | `~/Servers/minecraft/scripts/rcon.py "op NICK"` |
 | Expulsar | `~/Servers/minecraft/scripts/rcon.py "kick NICK motivo"` |
 
-A whitelist fica em `server/whitelist.json`, que é versionado. Depois de liberar ou remover alguém, faça commit numa branch, como qualquer outra mudança. Para convidar alguém de outra casa, veja `docs/MULTIPLAYER.md`.
+A whitelist fica em `server/whitelist.json` e os operadores em `server/ops.json`. Os dois ficam fora do Git, porque guardam nicks e UUIDs dos jogadores; o servidor mantém esses arquivos sozinho, então não há commit a fazer ao liberar ou remover alguém. Para convidar alguém de outra casa, veja `docs/MULTIPLAYER.md`.
 
 ## Desempenho
 

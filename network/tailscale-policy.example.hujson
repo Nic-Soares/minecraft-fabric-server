@@ -1,12 +1,18 @@
-// Política de acesso do tailnet. Este arquivo é a fonte da verdade:
-// mude aqui, faça commit e cole o conteúdo em
-// https://login.tailscale.com/admin/acls
+// Modelo da política de acesso do tailnet. Este arquivo é a fonte da
+// verdade das regras; o IP real do Mac fica fora do Git.
+//
+// Uso: copie para tailscale-policy.hujson (ignorado pelo Git), troque
+// 100.x.y.z pelo IP do Mac e cole o resultado em
+// https://login.tailscale.com/admin/acls (aba JSON editor).
+// Passo a passo em docs/MULTIPLAYER.md.
 //
 // Formato HuJSON: JSON com comentários e vírgula no fim permitidos.
 {
 	"hosts": {
 		// IP Tailscale do Mac que roda o servidor. Descubra com:
 		// /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+		// 100.x.y.z é inválido de propósito: o console recusa salvar até
+		// ele ser trocado.
 		"minecraft": "100.x.y.z",
 	},
 

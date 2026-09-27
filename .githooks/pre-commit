@@ -7,6 +7,8 @@ while IFS= read -r f; do
   case "$f" in
     *.jar|*.zst|*.mca|*.dat) echo "pre-commit: binário bloqueado: $f"; fail=1 ;;
     .env|*/.env)             echo "pre-commit: arquivo de segredo bloqueado: $f"; fail=1 ;;
+    server/whitelist.json|server/ops.json|network/tailscale-policy.hujson)
+                             echo "pre-commit: dado local bloqueado (jogadores ou IP): $f"; fail=1 ;;
   esac
 done < <(git diff --cached --name-only --diff-filter=ACM)
 
