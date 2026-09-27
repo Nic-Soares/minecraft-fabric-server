@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Valida a mensagem de commit contra o padrão descrito em GIT.md."""
+"""Valida a mensagem de commit contra o padrão descrito em docs/GIT.md."""
 import re, sys
 
 lines = [l for l in open(sys.argv[1], encoding="utf-8").read().splitlines() if not l.startswith("#")]

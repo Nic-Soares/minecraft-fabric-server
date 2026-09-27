@@ -16,7 +16,7 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `launchd/minecraft.plist.template` | Modelo do job do launchd; o `service.sh` gera o plist real |
 | `.githooks/` | `pre-commit` (segredos e binários), `commit-msg` (formato) |
 | `.gitmessage` | Template da mensagem de commit |
-| `ARCHITETURE.html`, `GIT.md`, `CHANGELOG.md`, `docs/` | Documentação e histórico de releases |
+| `README.md`, `CHANGELOG.md`, `docs/` | Documentação e histórico de releases |
 
 ## O que fica fora
 

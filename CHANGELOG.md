@@ -1,6 +1,6 @@
 # Changelog
 
-Mudanças de cada release. Formato baseado no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/); versões seguem [SemVer](https://semver.org/lang/pt-BR/) com as regras do `GIT.md`, seção **Versões e releases**.
+Mudanças de cada release. Formato baseado no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/); versões seguem [SemVer](https://semver.org/lang/pt-BR/) com as regras do [docs/GIT.md](docs/GIT.md#versões-e-releases).
 
 ## [Não lançado]
 
@@ -25,7 +25,7 @@ Primeira release. Servidor Fabric rodando nativo no macOS, com amigos entrando p
 - `scripts/service.sh`, que gera o job do launchd a partir de `launchd/minecraft.plist.template`
 - Conexão de jogadores externos via Tailscale, com o modelo de política em `network/tailscale-policy.example.hujson`
 - Padrão de mensagem de commit com `.gitmessage` e hooks `pre-commit` e `commit-msg`
-- Documentação: `ARCHITETURE.html`, `GIT.md`, `docs/SETUP.md`, `docs/SCRIPTS.md`, `docs/OPERACAO.md` e `docs/MULTIPLAYER.md`
+- Documentação em `docs/`: arquitetura e stack com diagramas Mermaid, setup, scripts, operação, multiplayer e Git
 
 ### Corrigido
 
