@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template for the launchd job. Do not use it directly: scripts/service.sh
+     replaces __ROOT__ and __LABEL__ and writes launchd/minecraft.plist
+     (ignored by Git). launchd does not expand ~ or environment variables. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>__LABEL__</string>
+  <key>ProgramArguments</key>
+  <array><string>__ROOT__/scripts/start.sh</string></array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
+  <key>ExitTimeOut</key><integer>90</integer>
+  <key>StandardOutPath</key><string>__ROOT__/server/logs/launchd.out</string>
+  <key>StandardErrorPath</key><string>__ROOT__/server/logs/launchd.err</string>
+</dict>
+</plist>

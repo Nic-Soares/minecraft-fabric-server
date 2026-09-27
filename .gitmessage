@@ -1,0 +1,10 @@
+# <scope>: <one-line summary in English, ideally up to 50 characters>
+#
+# Body: explain what changes and why, with context on the problem.
+# Wrap lines at 72 characters. May have several paragraphs.
+#
+# Optional trailer:
+# Reported-by: Name <email>
+#
+# Scopes: config, mods, jvm, scripts, docs, git
+# Lines starting with # are discarded.

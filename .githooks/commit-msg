@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Validates the commit message against the convention described in docs/GIT.md."""
+import re, sys
+
+lines = [l for l in open(sys.argv[1], encoding="utf-8").read().splitlines() if not l.startswith("#")]
+while lines and not lines[-1].strip():
+    lines.pop()
+header = lines[0] if lines else ""
+errors = []
+
+if header.startswith(("Merge ", "Revert ")):
+    sys.exit(0)
+if not header:
+    errors.append("the first line is empty")
+if len(header) > 72:
+    errors.append(f"the first line has {len(header)} characters (maximum 72)")
+if not re.match(r"^(config|mods|jvm|scripts|docs|git)(\([a-z0-9-]+\))?: \S", header):
+    errors.append("the first line must start with a scope: config, mods, jvm, scripts, docs "
+                  "or git (e.g. 'mods: update lithium')")
+if header.endswith("."):
+    errors.append("the first line must not end with a period")
+if len(lines) > 1 and lines[1].strip():
+    errors.append("the second line must be blank")
+for n, line in enumerate(lines[2:], start=3):
+    if re.match(r"^[A-Za-z-]+: ", line) or "://" in line:
+        continue  # trailers and URLs
+    if len(line) > 74:
+        errors.append(f"line {n} has {len(line)} characters (maximum 74)")
+
+for e in errors:
+    print(f"commit-msg: {e}", file=sys.stderr)
+sys.exit(1 if errors else 0)

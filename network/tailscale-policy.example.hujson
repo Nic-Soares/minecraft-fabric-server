@@ -1,0 +1,37 @@
+// Template for the tailnet access policy. This file is the source of
+// truth for the rules; the Mac's real IP stays out of Git.
+//
+// Usage: copy to tailscale-policy.hujson (ignored by Git), replace
+// 100.x.y.z with the Mac's IP and paste the result into
+// https://login.tailscale.com/admin/acls (JSON editor tab).
+// Step by step in docs/MULTIPLAYER.md.
+//
+// HuJSON format: JSON with comments and trailing commas allowed.
+{
+	"hosts": {
+		// Tailscale IP of the Mac running the server. Find it with:
+		// /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+		// 100.x.y.z is invalid on purpose: the console refuses to save until
+		// it is replaced.
+		"minecraft": "100.x.y.z",
+	},
+
+	"grants": [
+		// Your own devices keep full access to each other.
+		{
+			"src": ["autogroup:member"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Any source, including the friends the Mac was shared with,
+		// reaches only the game port on the Mac. 25575 (RCON) and any
+		// other port stay invisible to them.
+		// "*" is what Tailscale documents as including sharing users;
+		// "autogroup:shared" did not let the traffic through.
+		{
+			"src": ["*"],
+			"dst": ["minecraft"],
+			"ip":  ["tcp:25565"],
+		},
+	],
+}

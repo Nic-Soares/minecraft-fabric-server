@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cliente RCON mínimo. Uso: scripts/rcon.py "comando 1" "comando 2" ..."""
+"""Minimal RCON client. Usage: scripts/rcon.py "command 1" "command 2" ..."""
 import os, pathlib, socket, struct, sys
 
 def load_env():
@@ -26,11 +26,11 @@ if not sys.argv[1:]:
 try:
     s = socket.create_connection(("127.0.0.1", int(os.environ.get("RCON_PORT", 25575))), timeout=10)
 except ConnectionRefusedError:
-    sys.exit("rcon: servidor desligado ou RCON desativado")
+    sys.exit("rcon: server stopped or RCON disabled")
 with s:
     send(s, 1, 3, os.environ["RCON_PASS"])
     if recv(s)[0] == -1:
-        sys.exit("rcon: senha recusada")
+        sys.exit("rcon: password rejected")
     for cmd in sys.argv[1:]:
         send(s, 2, 2, cmd)
         print(recv(s)[1])
