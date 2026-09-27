@@ -16,7 +16,7 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `launchd/minecraft.plist.template` | Modelo do job do launchd; o `service.sh` gera o plist real |
 | `.githooks/` | `pre-commit` (segredos e binários), `commit-msg` (formato) |
 | `.gitmessage` | Template da mensagem de commit |
-| `ARCHITETURE.html`, `GIT.md`, `docs/` | Documentação |
+| `ARCHITETURE.html`, `GIT.md`, `CHANGELOG.md`, `docs/` | Documentação e histórico de releases |
 
 ## O que fica fora
 
@@ -95,7 +95,7 @@ Ciclo de uma mudança:
 3. Mude, teste com `scripts/start.sh` e faça commit
 4. Pull request `feature/...` para `development` e merge
 5. Teste a `development` rodando de verdade por um tempo
-6. Pull request `development` para `main`, merge e tag, se for uma versão nova do jogo
+6. Pull request `development` para `main`, merge e tag de release (ver [Versões e releases](#versões-e-releases))
 
 Nunca faça commit direto na `main`. No GitHub, proteja a `main` (Settings, Branches, exigir pull request) e deixe a `development` como branch padrão, para os PRs já abrirem contra ela.
 
@@ -127,10 +127,52 @@ Automação:
 - O hook `commit-msg` recusa o commit se o formato estiver errado e diz qual regra falhou. Commits `Merge` e `Revert` gerados pelo Git são aceitos como vêm.
 - Sem trailers de assinatura (`Signed-off-by`, `Co-Authored-By`): o autor já fica registrado no próprio commit.
 
-## Convenções
+## Versões e releases
 
-- **Tags por versão do jogo:** `mc-26.3`. Quando sair o 26.4, `git checkout mc-26.3` + `mods.sh sync` volta ao último estado que funcionava.
-- **Backups ligados ao commit:** o `backup.sh` usa o hash curto no nome do arquivo, por exemplo `world-2026-09-27-1530-a1b2c3d.tar.zst`, para saber com qual stack aquele mundo rodava.
+O projeto segue [SemVer](https://semver.org/lang/pt-BR/): `vMAJOR.MINOR.PATCH`. A versão é do **projeto** (scripts, configs, docs), não do jogo. A versão do jogo continua no `versions.env` e aparece no `CHANGELOG.md` de cada release.
+
+### O que é o contrato público
+
+SemVer precisa de uma "API" para decidir o que quebra. Aqui ela é tudo em que você ou um script externo dependem:
+
+- Comandos e argumentos dos scripts (`service.sh start|stop|restart|status`, `mods.sh update|sync`, `backup.sh`)
+- Variáveis do `scripts/.env` e formato do `versions.env` e do `mods.lock`
+- Caminhos que guardam estado: `server/world/`, `backups/`, `server/whitelist.json`, `server/ops.json`
+- Compatibilidade do mundo: um mundo salvo nesta versão abre na próxima sem conversão
+
+### Qual número subir
+
+| Mudança | Exemplo | Antes da 1.0 | Depois da 1.0 |
+|---|---|---|---|
+| Quebra o contrato ou é irreversível | Subir o jogo de 26.3 para 26.4 (o mundo é convertido), renomear variável do `.env`, mudar argumento de script | MINOR | MAJOR |
+| Capacidade nova, compatível | Mod novo, script novo, porteiro sob demanda | MINOR | MINOR |
+| Correção ou update sem efeito no contrato | Update de patch de mod, flag da JVM, correção de doc | PATCH | PATCH |
+
+Na série `0.x` a regra de MAJOR vira MINOR: a série `0.x` avisa que o contrato ainda muda. A `1.0.0` sai quando o contrato estabilizar: servidor numa máquina dedicada e uma API ou painel web que dependa dele.
+
+### Como publicar uma release
+
+1. Na `development`, mova o conteúdo de `[Não lançado]` do `CHANGELOG.md` para uma seção `[X.Y.Z] - AAAA-MM-DD` e faça commit: `docs: prepara a release vX.Y.Z`
+2. Pull request `development` para `main` e merge
+3. Tag anotada e assinada no merge da `main`:
+
+   ```bash
+   git -C ~/Servers/minecraft switch main && git -C ~/Servers/minecraft pull
+   git -C ~/Servers/minecraft tag -s vX.Y.Z -m "vX.Y.Z"
+   git -C ~/Servers/minecraft push origin vX.Y.Z
+   ```
+
+4. No GitHub: aba **Releases**, botão **Draft a new release**, escolha a tag e cole a seção do `CHANGELOG.md`
+
+Tags só na `main`, nunca em commits da `development` ou de branches. Uma tag publicada não é movida nem apagada: se a release saiu com defeito, a correção vira a próxima PATCH.
+
+### Rollback
+
+`git checkout vX.Y.Z` + `scripts/mods.sh sync` volta à stack daquela release. Se a release seguinte subiu a versão do jogo, restaure também um backup do mundo feito antes dela: o Minecraft não abre um mundo convertido numa versão anterior.
+
+### Backups ligados ao commit
+
+O `backup.sh` usa o hash curto no nome do arquivo, por exemplo `world-2026-09-27-1530-a1b2c3d.tar.zst`, para saber com qual stack aquele mundo rodava. `git describe --tags <hash>` diz de qual release ele é.
 
 ## Recriar o servidor do zero
 
