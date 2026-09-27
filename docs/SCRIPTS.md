@@ -9,7 +9,8 @@ Tudo em `scripts/` é executável e funciona de qualquer pasta. Os `.sh` são sc
 | Quero | Script | Precisa do servidor ligado? |
 |---|---|---|
 | Instalar ou reinstalar Minecraft + Fabric | `install.sh` | Não (desligue antes) |
-| Ligar o servidor no terminal | `start.sh` | Não |
+| Ligar, desligar ou reiniciar em segundo plano | `service.sh` | Não |
+| Ligar o servidor no terminal (teste) | `start.sh` | Não |
 | Baixar os mods do `mods.lock` | `mods.sh sync` | Não (desligue antes) |
 | Procurar versões novas dos mods | `mods.sh update` | Não |
 | Mandar um comando ao servidor | `rcon.py` | Sim |
@@ -50,7 +51,24 @@ Em ordem:
 
 - **Heap:** 6 GB por padrão. Para mudar: `MC_HEAP=8G ~/Servers/minecraft/scripts/start.sh`.
 - **No terminal:** fica em primeiro plano. Para parar, digite `stop` e aperte Enter, ou use Ctrl+C; os dois salvam o mundo.
-- **Pelo launchd:** o `local.minecraft-fabric-server.plist` roda este mesmo script em segundo plano.
+- **Em segundo plano:** o `service.sh` faz o launchd rodar este mesmo script.
+
+## service.sh
+
+**O que faz:** liga, desliga e reinicia o servidor em segundo plano pelo launchd, o gerenciador de serviços do macOS.
+
+```bash
+~/Servers/minecraft/scripts/service.sh start
+~/Servers/minecraft/scripts/service.sh stop
+~/Servers/minecraft/scripts/service.sh restart
+~/Servers/minecraft/scripts/service.sh status
+```
+
+- **`start`:** gera `launchd/minecraft.plist` a partir de `launchd/minecraft.plist.template`, trocando `__ROOT__` pelo caminho do projeto, e registra o job `local.minecraft-fabric-server`. O launchd roda o `start.sh` e o religa se ele cair.
+- **`stop`:** tira o job do launchd, que manda SIGTERM ao Java; o servidor salva o mundo e sai. O script só volta depois disso.
+- **`status`:** mostra `state = running` e o `pid`, ou `state = desligado`.
+- **Por que um modelo:** o launchd não expande `~` nem variáveis dentro do plist. O modelo versionado não tem caminho nem nome de usuário; o plist gerado, com o caminho real, fica fora do Git.
+- **Não liga sozinho no login:** o plist fica no projeto, e não em `~/Library/LaunchAgents`.
 
 ## mods.sh
 
@@ -127,4 +145,5 @@ Em ordem:
 |---|---|
 | `scripts/.env` | Senhas (`RCON_PASS`, `MGMT_SECRET`). Fora do Git, permissão 600. |
 | `scripts/.env.example` | Modelo do `.env`, versionado e sem valores. |
-| `local.minecraft-fabric-server.plist` | Job do launchd que roda o `start.sh` em segundo plano. |
+| `launchd/minecraft.plist.template` | Modelo versionado do job do launchd, sem caminhos pessoais. |
+| `launchd/minecraft.plist` | Job gerado pelo `service.sh`. Fora do Git. |

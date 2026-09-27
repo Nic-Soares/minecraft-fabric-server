@@ -6,13 +6,13 @@ Comandos do dia a dia com o servidor já instalado. Todos rodam no Terminal, de 
 
 | Quero | Comando |
 |---|---|
-| Ligar (segundo plano) | `launchctl bootstrap gui/$(id -u) ~/Servers/minecraft/local.minecraft-fabric-server.plist` |
-| Desligar | `launchctl bootout gui/$(id -u)/local.minecraft-fabric-server` |
-| Reiniciar | Desligar, esperar uns 10 s, ligar |
-| Ver se está rodando | `launchctl print gui/$(id -u)/local.minecraft-fabric-server \| grep -E '^\s*state'` |
+| Ligar (segundo plano) | `~/Servers/minecraft/scripts/service.sh start` |
+| Desligar | `~/Servers/minecraft/scripts/service.sh stop` |
+| Reiniciar | `~/Servers/minecraft/scripts/service.sh restart` |
+| Ver se está rodando | `~/Servers/minecraft/scripts/service.sh status` |
 | Ver quem está online | `~/Servers/minecraft/scripts/rcon.py list` |
 
-`state = running` quer dizer ligado. Se o comando disser `Could not find service`, o servidor está desligado.
+`state = running` quer dizer ligado; `state = desligado`, desligado. O `stop` só volta depois que o mundo terminou de salvar.
 
 ## Logs
 
