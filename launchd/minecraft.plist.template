@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Modelo do job do launchd. Não use direto: o scripts/service.sh troca
-     __ROOT__ e __LABEL__ e grava launchd/minecraft.plist (ignorado pelo
-     Git). O launchd não expande ~ nem variáveis de ambiente. -->
+<!-- Template for the launchd job. Do not use it directly: scripts/service.sh
+     replaces __ROOT__ and __LABEL__ and writes launchd/minecraft.plist
+     (ignored by Git). launchd does not expand ~ or environment variables. -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>

@@ -1,33 +1,33 @@
 # Stack
 
-Versões, orçamento de memória e as decisões por trás de cada escolha. A fonte da verdade das versões é o `versions.env` e o `mods.lock`; esta página explica o porquê.
+Versions, memory budget, and the decisions behind each choice. The source of truth for versions is `versions.env` and `mods.lock`; this page explains the why.
 
-## Componentes
+## Components
 
-| Componente | Versão | Papel | Por que |
+| Component | Version | Role | Why |
 |---|---|---|---|
-| Minecraft Java Edition | 26.3 | base | Última estável. O manifesto da Mojang exige `javaVersion 25`. |
-| Eclipse Temurin JDK | 25 (LTS) | runtime | Versão exigida pelo jogo e LTS. O 27 continua instalado; o `lib.sh` fixa o 25. |
-| Fabric Installer | 1.1.2 | setup | Gera o `fabric-server-launch.jar` e baixa o `server.jar` oficial. |
-| Fabric Loader | 0.19.5 | loader | Classloader Knot + Mixin. Injeta os mods no servidor. |
-| Fabric API | 0.161.0+26.3 | lib | Dependência de C2ME, spark e Chunky. |
-| Lithium | mc26.3-0.26.1 | tick | Otimiza IA, física, colisão e hoppers sem mudar o comportamento vanilla. |
-| FerriteCore | 9.0.0 | memória | Deduplica estados de blocos e modelos. Reduz o heap usado. |
-| C2ME | 0.4.2-alpha.0.88 | chunks | Geração, I/O e carregamento de chunks em paralelo. Aproveita os núcleos do M5. |
-| ScalableLux | 0.3.0-alpha.0.6 | luz | Motor de iluminação paralelo, sucessor do Starlight. |
-| spark | 1.10.187 | observabilidade | Profiler de CPU, alocação e GC; MSPT e TPS ao vivo. |
-| Chunky | 1.5.3 | pré-geração | Gera o mundo antes de jogar. Tira o custo de worldgen do tick. |
+| Minecraft Java Edition | 26.3 | base | Latest stable. The Mojang manifest requires `javaVersion 25`. |
+| Eclipse Temurin JDK | 25 (LTS) | runtime | Version required by the game, and LTS. 27 is still installed; `lib.sh` pins 25. |
+| Fabric Installer | 1.1.2 | setup | Generates `fabric-server-launch.jar` and downloads the official `server.jar`. |
+| Fabric Loader | 0.19.5 | loader | Knot classloader + Mixin. Injects the mods into the server. |
+| Fabric API | 0.161.0+26.3 | lib | Dependency of C2ME, spark, and Chunky. |
+| Lithium | mc26.3-0.26.1 | tick | Optimizes AI, physics, collision, and hoppers without changing vanilla behavior. |
+| FerriteCore | 9.0.0 | memory | Deduplicates block states and models. Reduces heap usage. |
+| C2ME | 0.4.2-alpha.0.88 | chunks | Parallel chunk generation, I/O, and loading. Makes use of the M5 cores. |
+| ScalableLux | 0.3.0-alpha.0.6 | light | Parallel lighting engine, successor to Starlight. |
+| spark | 1.10.187 | observability | CPU, allocation, and GC profiler; live MSPT and TPS. |
+| Chunky | 1.5.3 | pre-generation | Generates the world before playing. Takes the worldgen cost out of the tick. |
 
-Versões consultadas em 27/09/2026 nas APIs Fabric Meta, Modrinth e no manifesto da Mojang. Os alphas de C2ME e ScalableLux são as únicas builds para 26.3.
+Versions checked on 2026-09-27 against the Fabric Meta and Modrinth APIs and the Mojang manifest. The C2ME and ScalableLux alphas are the only builds for 26.3.
 
-**Fora da stack:** Krypton (sem build para 26.3), VMP (só ajuda com dezenas de jogadores), ServerCore (muda o gameplay).
+**Left out of the stack:** Krypton (no build for 26.3), VMP (only helps with dozens of players), ServerCore (changes gameplay).
 
-## Camadas do processo
+## Process layers
 
 ```mermaid
 flowchart TB
   mods["Mods · Lithium, FerriteCore, C2ME, ScalableLux, spark, Chunky"]
-  fapi["Fabric API · hooks e eventos usados pelos mods"]
+  fapi["Fabric API · hooks and events used by the mods"]
   mc["Minecraft Dedicated Server 26.3"]
   loader["Fabric Loader 0.19.5 · Knot + Mixin"]
   jvm["JVM Temurin 25"]
@@ -36,49 +36,49 @@ flowchart TB
   mods --> fapi --> mc --> loader --> jvm --> os
 ```
 
-Cada camada roda sobre a de baixo. O loader fica abaixo do jogo porque é ele que carrega as classes do Minecraft e aplica os mixins antes do jogo iniciar.
+Each layer runs on top of the one below. The loader sits below the game because it is what loads the Minecraft classes and applies the mixins before the game starts.
 
-## Orçamento de memória
+## Memory budget
 
-Cenário mais exigente: você joga no mesmo Mac que roda o servidor.
+Most demanding scenario: you play on the same Mac that runs the server.
 
 ```mermaid
 pie showData
-  title 24 GB de memória unificada
-  "macOS, navegador, IDE" : 6
-  "Cliente Minecraft" : 5
-  "Heap do servidor" : 6
-  "Nativo da JVM (metaspace, code cache, buffers)" : 1.5
-  "Livre para page cache" : 5.5
+  title 24 GB of unified memory
+  "macOS, browser, IDE" : 6
+  "Minecraft client" : 5
+  "Server heap" : 6
+  "JVM native (metaspace, code cache, buffers)" : 1.5
+  "Free for page cache" : 5.5
 ```
 
-Se o servidor rodar sozinho, suba para `MC_HEAP=8G`. Acima disso o ganho é nulo para poucos jogadores e o ZGC só varre mais memória.
+If the server runs alone, raise it to `MC_HEAP=8G`. Beyond that the gain is nil for a few players and ZGC just scans more memory.
 
-Medido ocioso e pausado (`pause-when-empty-seconds=60`): cerca de 1,3 GB de RSS e 19% de um núcleo.
+Measured idle and paused (`pause-when-empty-seconds=60`): about 1.3 GB of RSS and 19% of one core.
 
-## Decisões técnicas
+## Technical decisions
 
-| Decisão | Motivo |
+| Decision | Reason |
 |---|---|
-| ZGC em vez de G1 | Pausas abaixo de 1 ms. Uma pausa longa do GC aparece no jogo como travada. Custa um pouco mais de CPU, que o M5 tem de sobra. |
-| Compact Object Headers | Estável no JDK 25 (JEP 519). Cada objeto fica 4 bytes menor. Com milhões de objetos pequenos, sobra heap e o GC trabalha menos. |
-| Heap fixo de 6 GB | `-Xms` igual a `-Xmx` e `AlwaysPreTouch`: a memória é reservada no boot, e não no meio do jogo. Troque com `MC_HEAP=8G`. |
-| Mods só no servidor | O cliente entra com o 26.3 vanilla do launcher. Não precisa instalar Fabric no cliente. |
-| launchd como supervisor | Reinicia em caso de crash e manda SIGTERM ao desligar; o servidor salva o mundo antes de sair. O plist fica no projeto, então o servidor não liga sozinho no login. |
-| `mods.txt` + `mods.lock` | `update` escolhe as versões e grava o lock. `sync` instala só o que está no lock, com sha512. Qualquer máquina monta o mesmo servidor. |
-| Nativo em vez de Docker no Mac | Docker no macOS roda numa VM Linux: perde memória e I/O de disco. O `compose.yaml` fica para a migração a Linux. |
+| ZGC instead of G1 | Pauses under 1 ms. A long GC pause shows up in the game as a freeze. Costs a bit more CPU, which the M5 has plenty of. |
+| Compact Object Headers | Stable in JDK 25 (JEP 519). Each object is 4 bytes smaller. With millions of small objects, more heap is left and the GC works less. |
+| Fixed 6 GB heap | `-Xms` equal to `-Xmx` and `AlwaysPreTouch`: memory is reserved at boot, not in the middle of the game. Change it with `MC_HEAP=8G`. |
+| Mods on the server only | The client joins with vanilla 26.3 from the launcher. No need to install Fabric on the client. |
+| launchd as supervisor | Restarts on crash and sends SIGTERM on shutdown; the server saves the world before exiting. The plist lives in the project, so the server does not start on its own at login. |
+| `mods.txt` + `mods.lock` | `update` picks the versions and writes the lock. `sync` installs only what is in the lock, with sha512. Any machine builds the same server. |
+| Native instead of Docker on the Mac | Docker on macOS runs in a Linux VM: it loses memory and disk I/O. `compose.yaml` is kept for the migration to Linux. |
 
-## Flags da JVM
+## JVM flags
 
-Definidas em `scripts/start.sh`.
+Defined in `scripts/start.sh`.
 
-| Flag | Efeito |
+| Flag | Effect |
 |---|---|
-| `-Xms6G -Xmx6G` | Heap fixo |
-| `-XX:+UseZGC` | ZGC, generacional por padrão no JDK 25 |
-| `-XX:+UseCompactObjectHeaders` | Cabeçalho de objeto menor |
-| `-XX:+AlwaysPreTouch` | Toca todas as páginas do heap no boot |
-| `-XX:+PerfDisableSharedMem` | Desliga o arquivo de métricas `hsperfdata` em `/tmp`, cuja escrita em disco pode alongar pausas do GC |
-| `--enable-native-access=ALL-UNNAMED` | Libera acesso nativo para os mods sem aviso |
-| `--sun-misc-unsafe-memory-access=allow` | Mantém o `Unsafe` que mods antigos usam |
-| `-Xlog:gc*:file=logs/gc.log:...` | GC log com 5 arquivos rotativos de 10 MB |
+| `-Xms6G -Xmx6G` | Fixed heap |
+| `-XX:+UseZGC` | ZGC, generational by default in JDK 25 |
+| `-XX:+UseCompactObjectHeaders` | Smaller object header |
+| `-XX:+AlwaysPreTouch` | Touches every heap page at boot |
+| `-XX:+PerfDisableSharedMem` | Disables the `hsperfdata` metrics file in `/tmp`, whose disk writes can lengthen GC pauses |
+| `--enable-native-access=ALL-UNNAMED` | Allows native access for the mods without a warning |
+| `--sun-misc-unsafe-memory-access=allow` | Keeps the `Unsafe` that older mods use |
+| `-Xlog:gc*:file=logs/gc.log:...` | GC log with 5 rotating 10 MB files |

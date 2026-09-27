@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Valida a mensagem de commit contra o padrão descrito em docs/GIT.md."""
+"""Validates the commit message against the convention described in docs/GIT.md."""
 import re, sys
 
 lines = [l for l in open(sys.argv[1], encoding="utf-8").read().splitlines() if not l.startswith("#")]
@@ -11,21 +11,21 @@ errors = []
 if header.startswith(("Merge ", "Revert ")):
     sys.exit(0)
 if not header:
-    errors.append("a primeira linha está vazia")
+    errors.append("the first line is empty")
 if len(header) > 72:
-    errors.append(f"a primeira linha tem {len(header)} caracteres (máximo 72)")
+    errors.append(f"the first line has {len(header)} characters (maximum 72)")
 if not re.match(r"^(config|mods|jvm|scripts|docs|git)(\([a-z0-9-]+\))?: \S", header):
-    errors.append("a primeira linha precisa começar com um escopo: config, mods, jvm, scripts, docs "
-                  "ou git (ex.: 'mods: atualiza lithium')")
+    errors.append("the first line must start with a scope: config, mods, jvm, scripts, docs "
+                  "or git (e.g. 'mods: update lithium')")
 if header.endswith("."):
-    errors.append("a primeira linha não termina com ponto")
+    errors.append("the first line must not end with a period")
 if len(lines) > 1 and lines[1].strip():
-    errors.append("a segunda linha precisa estar em branco")
+    errors.append("the second line must be blank")
 for n, line in enumerate(lines[2:], start=3):
     if re.match(r"^[A-Za-z-]+: ", line) or "://" in line:
-        continue  # trailers e URLs
+        continue  # trailers and URLs
     if len(line) > 74:
-        errors.append(f"linha {n} tem {len(line)} caracteres (máximo 74)")
+        errors.append(f"line {n} has {len(line)} characters (maximum 74)")
 
 for e in errors:
     print(f"commit-msg: {e}", file=sys.stderr)

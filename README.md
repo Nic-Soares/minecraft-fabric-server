@@ -1,24 +1,24 @@
 # minecraft-fabric-server
 
-Servidor dedicado Minecraft Java 26.3 com Fabric, rodando nativo no macOS (Apple Silicon), com mods de desempenho só no servidor e amigos entrando pelo Tailscale, sem abrir portas no roteador.
+Dedicated Minecraft Java 26.3 server with Fabric, running natively on macOS (Apple Silicon), with server-side-only performance mods and friends joining through Tailscale, without opening ports on the router.
 
-## Documentação
+## Documentation
 
-| Documento | Conteúdo |
+| Document | Contents |
 |---|---|
-| [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | Visão geral, rede, fluxos de boot e backup, arquivos do projeto |
-| [docs/STACK.md](docs/STACK.md) | Versões, memória, decisões técnicas e flags da JVM |
-| [docs/SETUP.md](docs/SETUP.md) | Instalação do zero, passo a passo |
-| [docs/SCRIPTS.md](docs/SCRIPTS.md) | O que cada script faz |
-| [docs/OPERACAO.md](docs/OPERACAO.md) | Dia a dia: ligar, desligar, logs, jogadores, backup |
-| [docs/MULTIPLAYER.md](docs/MULTIPLAYER.md) | Conexão de amigos pelo Tailscale |
-| [docs/GIT.md](docs/GIT.md) | Versionamento, branches, commits e releases |
-| [CHANGELOG.md](CHANGELOG.md) | Mudanças de cada release |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Overview, network, boot and backup flows, project files |
+| [docs/STACK.md](docs/STACK.md) | Versions, memory, technical decisions and JVM flags |
+| [docs/SETUP.md](docs/SETUP.md) | Installation from scratch, step by step |
+| [docs/SCRIPTS.md](docs/SCRIPTS.md) | What each script does |
+| [docs/OPERATIONS.md](docs/OPERATIONS.md) | Day to day: start, stop, logs, players, backup |
+| [docs/MULTIPLAYER.md](docs/MULTIPLAYER.md) | Connecting friends through Tailscale |
+| [docs/GIT.md](docs/GIT.md) | Versioning, branches, commits and releases |
+| [CHANGELOG.md](CHANGELOG.md) | Changes in each release |
 
-## Início rápido
+## Quick start
 
 ```bash
 ~/Servers/minecraft/scripts/service.sh start
 ```
 
-Primeira vez nesta máquina: siga o [docs/SETUP.md](docs/SETUP.md).
+First time on this machine: follow [docs/SETUP.md](docs/SETUP.md).
