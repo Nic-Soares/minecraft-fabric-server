@@ -1,0 +1,10 @@
+# <escopo>: <resumo em uma linha, idealmente até 50 caracteres>
+#
+# Corpo: explique o que muda e por quê, com contexto do problema.
+# Quebre as linhas em até 72 caracteres. Pode ter vários parágrafos.
+#
+# Trailers opcionais (o Signed-off-by é adicionado sozinho):
+# Reported-by: Nome <email>
+#
+# Escopos: config, mods, jvm, scripts, docs, git
+# Linhas que começam com # são descartadas.
