@@ -1,0 +1,28 @@
+// Política de acesso do tailnet. Este arquivo é a fonte da verdade:
+// mude aqui, faça commit e cole o conteúdo em
+// https://login.tailscale.com/admin/acls
+//
+// Formato HuJSON: JSON com comentários e vírgula no fim permitidos.
+{
+	"hosts": {
+		// IP Tailscale do Mac que roda o servidor. Descubra com:
+		// /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+		"minecraft": "100.x.y.z",
+	},
+
+	"grants": [
+		// Seus próprios dispositivos continuam com acesso total entre si.
+		{
+			"src": ["autogroup:member"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Amigos com quem o Mac foi compartilhado enxergam só a porta do
+		// jogo. A 25575 (RCON) e qualquer outra porta ficam invisíveis.
+		{
+			"src": ["autogroup:shared"],
+			"dst": ["minecraft"],
+			"ip":  ["tcp:25565"],
+		},
+	],
+}
