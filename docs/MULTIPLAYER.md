@@ -24,7 +24,9 @@ O tráfego vai direto entre os computadores (P2P). Quando um firewall bloqueia a
 brew install --cask tailscale-app
 ```
 
-Abra o Tailscale pelo Launchpad e faça login. A conta que você usar vira a dona da rede.
+Antes, desconecte qualquer outra VPN (Proton VPN, por exemplo). O macOS mantém um só túnel VPN ativo; com outra VPN ligada, o login do Tailscale trava na tela "Join a tailnet".
+
+Abra o Tailscale pelo Launchpad e clique em **Sign in to your network**. O login é pelo navegador (Google, Microsoft ou GitHub) e cria a conta se ela não existir. A conta que você usar vira a dona da rede.
 
 **Pronto quando:** o ícone do Tailscale na barra de menus mostra **Connected**.
 
@@ -72,6 +74,10 @@ O amigo usa o **mesmo** IP `100.x.y.z` do passo 2, de qualquer lugar. O `IP da r
 1. `~/Servers/minecraft/scripts/rcon.py "whitelist remove NICK_DO_AMIGO"`
 2. Em https://login.tailscale.com/admin/machines, menu **…** do Mac, **Share**, e remova o acesso dele.
 
+## Uma VPN por vez
+
+Enquanto o Mac for o servidor dos amigos, o Tailscale precisa ficar conectado, então outras VPNs (como a Proton VPN) ficam desligadas neste Mac. Elas continuam funcionando nos seus outros aparelhos.
+
 ## O Mac precisa estar acordado
 
 O servidor só responde com o Mac ligado e acordado. O `start.sh` já impede o sleep por inatividade, mas **fechar a tampa põe o Mac para dormir**, a não ser que ele esteja na tomada com monitor externo.
@@ -85,3 +91,4 @@ O servidor só responde com o Mac ligado e acordado. O `start.sh` já impede o s
 | "You are not white-listed" | Nick fora da whitelist | `rcon.py "whitelist list"` |
 | "Outdated server" ou "Outdated client" | Versão do jogo do amigo diferente de 26.3 | Amigo escolhe a 26.3 em **Installations** |
 | Funcionava e parou para todos | Chave do Mac expirou ou o Mac dormiu | Passo 4 e a tampa do Mac |
+| Login do Tailscale trava em "Join a tailnet", ou o Tailscale desconecta sozinho | Outra VPN ligada no Mac (Proton VPN) | `scutil --nc list`: só o Tailscale pode aparecer como `Connected` |
