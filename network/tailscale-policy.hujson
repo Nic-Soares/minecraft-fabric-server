@@ -17,10 +17,13 @@
 			"dst": ["*"],
 			"ip":  ["*"],
 		},
-		// Amigos com quem o Mac foi compartilhado enxergam só a porta do
-		// jogo. A 25575 (RCON) e qualquer outra porta ficam invisíveis.
+		// Qualquer origem, incluindo os amigos com quem o Mac foi
+		// compartilhado, alcança só a porta do jogo no Mac. A 25575 (RCON)
+		// e qualquer outra porta ficam invisíveis para eles.
+		// "*" é o que o Tailscale documenta como incluindo usuários de
+		// compartilhamento; "autogroup:shared" não liberou o tráfego.
 		{
-			"src": ["autogroup:shared"],
+			"src": ["*"],
 			"dst": ["minecraft"],
 			"ip":  ["tcp:25565"],
 		},
