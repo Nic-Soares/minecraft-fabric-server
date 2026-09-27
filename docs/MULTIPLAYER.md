@@ -67,7 +67,7 @@ Em https://login.tailscale.com/admin/machines: menu **…** do Mac, depois **Dis
 | Você | Libera o nick dele: `~/Servers/minecraft/scripts/rcon.py "whitelist add NICK_DO_AMIGO"` |
 | Amigo | No Minecraft: **Multiplayer**, **Add Server**, e em **Server Address** `100.x.y.z`. Depois **Join Server**. |
 
-O amigo usa o **mesmo** IP `100.x.y.z`, de qualquer lugar. O `IP da rede local` só funciona dentro da sua casa.
+O amigo usa o **mesmo** IP `100.x.y.z`, de qualquer lugar. O IP da sua rede de casa (veja com `ipconfig getifaddr en0`) só funciona dentro dela e pode mudar a cada reconexão do Wi-Fi.
 
 **Pronto quando:** o amigo entra no mundo e `~/Servers/minecraft/scripts/rcon.py list` mostra o nick dele.
 
