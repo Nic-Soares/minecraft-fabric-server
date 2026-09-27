@@ -5,15 +5,17 @@
 .env
 scripts/.env
 
+# política real do Tailscale, com o IP do Mac (modelo: .example.hujson)
+network/tailscale-policy.hujson
+
 # snapshots do mundo: binários grandes, ficam fora do Git
 backups/
 
-# runtime do servidor: tudo ignorado, exceto o que descreve a configuração
+# runtime do servidor: tudo ignorado, exceto o que descreve a configuração.
+# whitelist.json e ops.json ficam fora: guardam nicks e UUIDs dos jogadores.
 server/*
 !server/server.properties.base
 !server/config/
-!server/whitelist.json
-!server/ops.json
 
 # Python
 __pycache__/

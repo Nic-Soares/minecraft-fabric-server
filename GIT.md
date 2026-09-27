@@ -11,7 +11,7 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `mods.lock` | Resolvido: versão exata, arquivo, sha512 e url de cada mod |
 | `server/server.properties.base` | Config do servidor, sem segredos |
 | `server/config/` | Configs geradas pelos mods (Lithium, C2ME, spark...) |
-| `server/whitelist.json`, `server/ops.json` | Acesso ao servidor |
+| `network/tailscale-policy.example.hujson` | Modelo da política do Tailscale, sem o IP do Mac |
 | `scripts/` | `start.sh`, `mods.sh`, `rcon.py`, `backup.sh`, `.env.example` |
 | `local.minecraft-fabric-server.plist` | Job do launchd |
 | `.githooks/` | `pre-commit` (segredos e binários), `commit-msg` (formato) |
@@ -27,6 +27,8 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `server/*.jar`, `server/libraries/`, `server/versions/`, `server/.fabric/` | Recriados pelo Fabric Installer a partir do `versions.env` |
 | `server/mods/` | Recriado pelo `mods.sh sync` a partir do `mods.lock` |
 | `server/world/`, `server/logs/`, `server/usercache.json` | Estado e runtime |
+| `server/whitelist.json`, `server/ops.json` | Nicks e UUIDs dos jogadores |
+| `network/tailscale-policy.hujson` | Política real, com o IP Tailscale do Mac |
 | `backups/` | Binários grandes (`.tar.zst`) |
 
 O `.gitignore` ignora `server/*` inteiro e abre exceções explícitas. Um arquivo novo que o servidor criar fica fora do Git até alguém decidir que ele é configuração.
