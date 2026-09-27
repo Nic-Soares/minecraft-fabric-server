@@ -238,8 +238,8 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padd
     <text x="34" y="322" class="t-sub">senha em scripts/.env (600)</text>
 
     <rect x="20" y="548" width="200" height="52" rx="8" class="box"/>
-    <text x="34" y="570" class="t-title">launchctl</text>
-    <text x="34" y="588" class="t-mono">bootstrap &#183; bootout</text>
+    <text x="34" y="570" class="t-title">service.sh</text>
+    <text x="34" y="588" class="t-mono">start &#183; stop &#183; status</text>
 
     <path d="M120 200 L120 280" class="edge" marker-end="url(#ah)"/>
     <path d="M220 308 L268 308" class="edge" marker-end="url(#ah)"/>
@@ -344,7 +344,9 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padd
         <li>versions.env <span class="n">versões do JDK, jogo, loader e installer</span></li>
         <li>mods.txt <span class="n">quais mods você quer</span></li>
         <li>mods.lock <span class="n">versão exata e sha512 de cada mod</span></li>
-        <li>local.minecraft-fabric-server.plist <span class="n">job do launchd</span></li>
+        <li><span class="d">launchd/</span>
+          <ul><li>minecraft.plist.template <span class="n">modelo do job; o plist real é gerado e fica fora do Git</span></li></ul>
+        </li>
         <li>ARCHITETURE.html, GIT.md <span class="n">documentação</span></li>
         <li><span class="d">docs/</span>
           <ul><li>SETUP.md <span class="n">passo a passo de instalação</span></li><li>SCRIPTS.md <span class="n">o que cada script faz</span></li><li>OPERACAO.md <span class="n">dia a dia, logs e jogadores</span></li><li>MULTIPLAYER.md <span class="n">conexão de amigos pelo Tailscale</span></li></ul>
@@ -353,6 +355,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padd
         <li><span class="d">scripts/</span>
           <ul>
             <li>install.sh <span class="n">instala Minecraft + Fabric</span></li>
+            <li>service.sh <span class="n">liga e desliga pelo launchd</span></li>
             <li>start.sh <span class="n">gera server.properties e sobe a JVM</span></li>
             <li>mods.sh <span class="n">update e sync</span></li>
             <li>rcon.py <span class="n">manda comandos para o servidor</span></li>

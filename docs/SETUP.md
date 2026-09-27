@@ -57,7 +57,7 @@ sed -i '' 's/eula=false/eula=true/' ~/Servers/minecraft/server/eula.txt
 ## 7. Ligar em segundo plano · 1 min
 
 ```bash
-launchctl bootstrap gui/$(id -u) ~/Servers/minecraft/local.minecraft-fabric-server.plist
+~/Servers/minecraft/scripts/service.sh start
 ```
 
 **Pronto quando:** uns 20 s depois, `~/Servers/minecraft/scripts/rcon.py list` responde `There are 0 of a max of 20 players online`.

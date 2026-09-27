@@ -13,7 +13,7 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `server/config/` | Configs geradas pelos mods (Lithium, C2ME, spark...) |
 | `network/tailscale-policy.example.hujson` | Modelo da política do Tailscale, sem o IP do Mac |
 | `scripts/` | `start.sh`, `mods.sh`, `rcon.py`, `backup.sh`, `.env.example` |
-| `local.minecraft-fabric-server.plist` | Job do launchd |
+| `launchd/minecraft.plist.template` | Modelo do job do launchd; o `service.sh` gera o plist real |
 | `.githooks/` | `pre-commit` (segredos e binários), `commit-msg` (formato) |
 | `.gitmessage` | Template da mensagem de commit |
 | `ARCHITETURE.html`, `GIT.md`, `docs/` | Documentação |

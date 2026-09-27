@@ -8,6 +8,9 @@ scripts/.env
 # política real do Tailscale, com o IP do Mac (modelo: .example.hujson)
 network/tailscale-policy.hujson
 
+# job do launchd gerado pelo scripts/service.sh (modelo: .template)
+launchd/minecraft.plist
+
 # snapshots do mundo: binários grandes, ficam fora do Git
 backups/
 
