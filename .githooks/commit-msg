@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Valida a mensagem de commit contra o padrão descrito em GIT.md."""
+import re, sys
+
+lines = [l for l in open(sys.argv[1], encoding="utf-8").read().splitlines() if not l.startswith("#")]
+while lines and not lines[-1].strip():
+    lines.pop()
+header = lines[0] if lines else ""
+errors = []
+
+if header.startswith(("Merge ", "Revert ")):
+    sys.exit(0)
+if not header:
+    errors.append("a primeira linha está vazia")
+if len(header) > 72:
+    errors.append(f"a primeira linha tem {len(header)} caracteres (máximo 72)")
+if not re.match(r"^(config|mods|jvm|scripts|docs|git)(\([a-z0-9-]+\))?: \S", header):
+    errors.append("a primeira linha precisa começar com um escopo: config, mods, jvm, scripts, docs "
+                  "ou git (ex.: 'mods: atualiza lithium')")
+if header.endswith("."):
+    errors.append("a primeira linha não termina com ponto")
+if len(lines) > 1 and lines[1].strip():
+    errors.append("a segunda linha precisa estar em branco")
+for n, line in enumerate(lines[2:], start=3):
+    if re.match(r"^[A-Za-z-]+: ", line) or "://" in line:
+        continue  # trailers e URLs
+    if len(line) > 74:
+        errors.append(f"linha {n} tem {len(line)} caracteres (máximo 74)")
+if not any(l.startswith("Signed-off-by: ") for l in lines):
+    errors.append("falta o trailer Signed-off-by")
+
+for e in errors:
+    print(f"commit-msg: {e}", file=sys.stderr)
+sys.exit(1 if errors else 0)

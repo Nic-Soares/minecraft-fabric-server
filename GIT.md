@@ -14,8 +14,9 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `server/whitelist.json`, `server/ops.json` | Acesso ao servidor |
 | `scripts/` | `start.sh`, `mods.sh`, `rcon.py`, `backup.sh`, `.env.example` |
 | `local.minecraft-fabric-server.plist` | Job do launchd |
-| `.githooks/pre-commit` | Barreira contra segredos e binários |
-| `ARCHITETURE.html`, `GIT.md` | Documentação |
+| `.githooks/` | `pre-commit` (segredos e binários), `prepare-commit-msg` (Signed-off-by), `commit-msg` (formato) |
+| `.gitmessage` | Template da mensagem de commit |
+| `ARCHITETURE.html`, `GIT.md`, `docs/` | Documentação |
 
 ## O que fica fora
 
@@ -74,7 +75,7 @@ Rollback: `git revert <commit>` + `scripts/mods.sh sync`.
   - arquivos `.jar`, `.zst`, `.mca`, `.dat` e `.env`
   - qualquer linha adicionada com valor em `rcon.password`, `management-server-secret`, `RCON_PASS` ou `MGMT_SECRET`
 
-O hook fica ativo pelo `git config core.hooksPath .githooks`. Essa config é local: depois de clonar em outra máquina, rode o comando de novo.
+Os hooks ficam ativos pelo `git config core.hooksPath .githooks`. Essa config é local: depois de clonar em outra máquina, rode o comando de novo.
 
 ## Fluxo de branches
 
@@ -96,9 +97,38 @@ Ciclo de uma mudança:
 
 Nunca faça commit direto na `main`. No GitHub, proteja a `main` (Settings, Branches, exigir pull request) e deixe a `development` como branch padrão, para os PRs já abrirem contra ela.
 
+## Mensagem de commit
+
+Formato:
+
+```
+<escopo>: resumo em uma linha
+
+Corpo explicando o que muda e por quê, com o contexto do problema.
+Linhas de até 72 caracteres, para o git log ficar legível mesmo
+indentado. Pode ter vários parágrafos.
+
+Reported-by: Nome <email>
+Signed-off-by: Nicolas Santos <email>
+```
+
+| Regra | Por quê |
+|---|---|
+| Primeira linha com escopo e até 72 caracteres, sem ponto final | É o que aparece no `git log --oneline`, no gitk e no shortlog |
+| Escopos: `config`, `mods`, `jvm`, `scripts`, `docs`, `git` | Filtra o histórico por área: `git log --grep '^mods:'` |
+| Segunda linha em branco | O Git separa o título do corpo por ela |
+| Corpo com linhas de até 72 (o hook tolera 74) | Leitura no terminal |
+| Corpo explica o porquê; o diff já mostra o quê | Contexto que o código não guarda |
+| `Signed-off-by` no fim | Registra quem assume a mudança |
+
+Automação:
+
+- `git commit` sem `-m` abre o editor com o template `.gitmessage` (ativado por `git config commit.template .gitmessage`).
+- O hook `prepare-commit-msg` adiciona o `Signed-off-by` sozinho, com o nome e o email do `git config`.
+- O hook `commit-msg` recusa o commit se o formato estiver errado e diz qual regra falhou. Commits `Merge` e `Revert` gerados pelo Git são aceitos como vêm.
+
 ## Convenções
 
-- **Commits por escopo:** `mods:`, `jvm:`, `config:`, `scripts:`, `docs:`, `git:`.
 - **Tags por versão do jogo:** `mc-26.3`. Quando sair o 26.4, `git checkout mc-26.3` + `mods.sh sync` volta ao último estado que funcionava.
 - **Backups ligados ao commit:** o `backup.sh` usa o hash curto no nome do arquivo, por exemplo `world-2026-09-27-1530-a1b2c3d.tar.zst`, para saber com qual stack aquele mundo rodava.
 
@@ -108,6 +138,7 @@ Nunca faça commit direto na `main`. No GitHub, proteja a `main` (Settings, Bran
 git clone git@github.com:<usuario>/<repo>.git ~/Servers/minecraft
 cd ~/Servers/minecraft
 git config core.hooksPath .githooks
+git config commit.template .gitmessage
 cp scripts/.env.example scripts/.env && chmod 600 scripts/.env
 scripts/install.sh
 scripts/mods.sh sync
