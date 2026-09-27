@@ -1,6 +1,6 @@
 # Setup
 
-Passo a passo para montar o servidor do zero. Todos os comandos rodam no Terminal, de qualquer pasta. A arquitetura está no `ARCHITETURE.html`; o que cada script faz, no `docs/SCRIPTS.md`.
+Passo a passo para montar o servidor do zero. Todos os comandos rodam no Terminal, de qualquer pasta. A arquitetura está em [ARQUITETURA.md](ARQUITETURA.md); o que cada script faz, em [SCRIPTS.md](SCRIPTS.md).
 
 Tempo total: cerca de 20 minutos, mais a pré-geração opcional do mundo.
 
