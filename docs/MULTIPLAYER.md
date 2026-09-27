@@ -14,6 +14,8 @@ O Mac e o computador de cada amigo entram numa rede privada criptografada (Tails
 | Conta Microsoft (`online-mode=true`) | Ninguém entra fingindo ser outra pessoa | `server.properties.base` |
 | Whitelist | Só nicks liberados entram, mesmo com acesso à rede | `server/whitelist.json` |
 
+**Endereço deste servidor na rede Tailscale: `100.x.y.z`** (nome `nome-do-mac`).
+
 O tráfego vai direto entre os computadores (P2P). Quando um firewall bloqueia a conexão direta, o Tailscale passa por um relay dele (DERP): funciona, com mais latência.
 
 ## Configurar o Mac (uma vez) · cerca de 10 min
@@ -24,9 +26,7 @@ O tráfego vai direto entre os computadores (P2P). Quando um firewall bloqueia a
 brew install --cask tailscale-app
 ```
 
-Antes, desconecte qualquer outra VPN (Proton VPN, por exemplo). O macOS mantém um só túnel VPN ativo; com outra VPN ligada, o login do Tailscale trava na tela "Join a tailnet".
-
-Abra o Tailscale pelo Launchpad e clique em **Sign in to your network**. O login é pelo navegador (Google, Microsoft ou GitHub) e cria a conta se ela não existir. A conta que você usar vira a dona da rede.
+Abra o Tailscale pelo Launchpad e faça login. A conta que você usar vira a dona da rede.
 
 **Pronto quando:** o ícone do Tailscale na barra de menus mostra **Connected**.
 
@@ -41,7 +41,7 @@ Abra o Tailscale pelo Launchpad e clique em **Sign in to your network**. O login
 
 ### 3. Aplicar a política de acesso
 
-1. Em `network/tailscale-policy.hujson`, troque `100.x.y.z` pelo IP do passo 2 e faça commit.
+1. Confira que o IP em `network/tailscale-policy.hujson` é o do passo 2.
 2. Abra https://login.tailscale.com/admin/acls, apague o conteúdo e cole o arquivo inteiro.
 3. Clique em **Save**.
 
@@ -63,9 +63,9 @@ Em https://login.tailscale.com/admin/machines: menu **…** do Mac, depois **Dis
 | Você | Em https://login.tailscale.com/admin/machines, menu **…** do Mac, depois **Share**. Gere o link de convite e mande para o amigo. |
 | Amigo | Abre o link e aceita o convite |
 | Você | Libera o nick dele: `~/Servers/minecraft/scripts/rcon.py "whitelist add NICK_DO_AMIGO"` |
-| Amigo | No Minecraft: **Multiplayer**, **Add Server**, e em **Server Address** o IP `100.x.y.z` do Mac. Depois **Join Server**. |
+| Amigo | No Minecraft: **Multiplayer**, **Add Server**, e em **Server Address** `100.x.y.z`. Depois **Join Server**. |
 
-O amigo usa o **mesmo** IP `100.x.y.z` do passo 2, de qualquer lugar. O `IP da rede local` só funciona dentro da sua casa.
+O amigo usa o **mesmo** IP `100.x.y.z`, de qualquer lugar. O `IP da rede local` só funciona dentro da sua casa.
 
 **Pronto quando:** o amigo entra no mundo e `~/Servers/minecraft/scripts/rcon.py list` mostra o nick dele.
 
@@ -73,10 +73,6 @@ O amigo usa o **mesmo** IP `100.x.y.z` do passo 2, de qualquer lugar. O `IP da r
 
 1. `~/Servers/minecraft/scripts/rcon.py "whitelist remove NICK_DO_AMIGO"`
 2. Em https://login.tailscale.com/admin/machines, menu **…** do Mac, **Share**, e remova o acesso dele.
-
-## Uma VPN por vez
-
-Enquanto o Mac for o servidor dos amigos, o Tailscale precisa ficar conectado, então outras VPNs (como a Proton VPN) ficam desligadas neste Mac. Elas continuam funcionando nos seus outros aparelhos.
 
 ## O Mac precisa estar acordado
 
@@ -91,4 +87,3 @@ O servidor só responde com o Mac ligado e acordado. O `start.sh` já impede o s
 | "You are not white-listed" | Nick fora da whitelist | `rcon.py "whitelist list"` |
 | "Outdated server" ou "Outdated client" | Versão do jogo do amigo diferente de 26.3 | Amigo escolhe a 26.3 em **Installations** |
 | Funcionava e parou para todos | Chave do Mac expirou ou o Mac dormiu | Passo 4 e a tampa do Mac |
-| Login do Tailscale trava em "Join a tailnet", ou o Tailscale desconecta sozinho | Outra VPN ligada no Mac (Proton VPN) | `scutil --nc list`: só o Tailscale pode aparecer como `Connected` |

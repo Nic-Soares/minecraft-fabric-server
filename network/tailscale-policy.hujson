@@ -7,8 +7,6 @@
 	"hosts": {
 		// IP Tailscale do Mac que roda o servidor. Descubra com:
 		// /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
-		// O valor abaixo é inválido de propósito: o console recusa salvar
-		// até ele ser trocado.
 		"minecraft": "100.x.y.z",
 	},
 
