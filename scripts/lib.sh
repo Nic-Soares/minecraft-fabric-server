@@ -16,7 +16,7 @@ java_bin() {
 
 load_env() {
   if [[ ! -f "$ROOT/scripts/.env" ]]; then
-    echo "scripts/.env não existe. Veja o passo 'Gerar as senhas' no ARCHITETURE.html" >&2
+    echo "scripts/.env não existe. Veja o passo 'Gerar as senhas' em docs/SETUP.md" >&2
     exit 1
   fi
   set -a; source "$ROOT/scripts/.env"; set +a
