@@ -14,7 +14,7 @@ O Git guarda tudo que **descreve** o servidor. Tudo que pode ser baixado de novo
 | `server/whitelist.json`, `server/ops.json` | Acesso ao servidor |
 | `scripts/` | `start.sh`, `mods.sh`, `rcon.py`, `backup.sh`, `.env.example` |
 | `local.minecraft-fabric-server.plist` | Job do launchd |
-| `.githooks/` | `pre-commit` (segredos e binários), `prepare-commit-msg` (Signed-off-by), `commit-msg` (formato) |
+| `.githooks/` | `pre-commit` (segredos e binários), `commit-msg` (formato) |
 | `.gitmessage` | Template da mensagem de commit |
 | `ARCHITETURE.html`, `GIT.md`, `docs/` | Documentação |
 
@@ -109,7 +109,6 @@ Linhas de até 72 caracteres, para o git log ficar legível mesmo
 indentado. Pode ter vários parágrafos.
 
 Reported-by: Nome <email>
-Signed-off-by: Nicolas Santos <email>
 ```
 
 | Regra | Por quê |
@@ -119,13 +118,12 @@ Signed-off-by: Nicolas Santos <email>
 | Segunda linha em branco | O Git separa o título do corpo por ela |
 | Corpo com linhas de até 72 (o hook tolera 74) | Leitura no terminal |
 | Corpo explica o porquê; o diff já mostra o quê | Contexto que o código não guarda |
-| `Signed-off-by` no fim | Registra quem assume a mudança |
 
 Automação:
 
 - `git commit` sem `-m` abre o editor com o template `.gitmessage` (ativado por `git config commit.template .gitmessage`).
-- O hook `prepare-commit-msg` adiciona o `Signed-off-by` sozinho, com o nome e o email do `git config`.
 - O hook `commit-msg` recusa o commit se o formato estiver errado e diz qual regra falhou. Commits `Merge` e `Revert` gerados pelo Git são aceitos como vêm.
+- Sem trailers de assinatura (`Signed-off-by`, `Co-Authored-By`): o autor já fica registrado no próprio commit.
 
 ## Convenções
 
