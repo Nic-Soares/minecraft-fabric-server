@@ -128,41 +128,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padd
 @media (max-width:520px){ body{font-size:15px} ol.steps>li{grid-template-columns:32px 1fr;gap:4px 10px} ol.steps>li::before{width:28px;height:28px} }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* v3: páginas orientadas a ação */
-.next{background:var(--accent);color:var(--bg);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
-.next .eyebrow{color:var(--bg);opacity:.8}
-.next h2{font-size:1.5rem}
-.next p{color:var(--bg);opacity:.9;font-size:.95rem}
-.next pre{background:rgba(0,0,0,.22);border-color:transparent;color:#fff}
-.next .copy{background:transparent;color:var(--bg);border-color:currentColor;opacity:.85}
-.progress{display:flex;flex-direction:column;gap:8px}
-.progress .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
-.progress .count{font-family:var(--mono);font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.track{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden}
-.track div{height:100%;background:var(--ok);border-radius:99px;transition:width .25s ease}
-.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.task{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:28px 1fr;gap:6px 14px}
-.task input{grid-row:span 4;width:22px;height:22px;margin:2px 0 0;accent-color:var(--ok);cursor:pointer}
-.task>*:not(input){grid-column:2;min-width:0}
-.task .head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.task .num{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.task h3{font-size:1.05rem}
-.task .time{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-left:auto}
-.task p{font-size:.93rem;color:var(--muted)}
-.task .check{font-size:.88rem;color:var(--ink)}
-.task .check b{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ok);margin-right:6px}
-.task.done{background:transparent}
-.task.done h3{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.task.done .body{display:none}
-.task .by{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--ok-soft);color:var(--ok)}
-.task .opt{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--surface2);color:var(--muted)}
-.body{display:flex;flex-direction:column;gap:8px}
 .daily td:first-child{font-weight:600;white-space:nowrap}
-.daily td code{white-space:nowrap}
-.sub{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.93rem}
-.sub li::marker{font-family:var(--mono);color:var(--muted)}
-kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
-.divider{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:28px}
 </style>
 </head>
 <body>
@@ -170,209 +136,12 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">Minecraft Java 26.3 &middot; Fabric &middot; MacBook Pro M5</div>
+  <div class="eyebrow">Arquitetura &middot; Minecraft Java 26.3 &middot; Fabric</div>
   <h1>Servidor Fabric no M5</h1>
-  <p class="lede">Primeiro o que fazer, depois como funciona. Os comandos rodam no app Terminal, de qualquer pasta.</p>
+  <p class="lede">Como o servidor é montado: processos, camadas, versões, memória e as decisões por trás de cada escolha.</p>
+  <p class="src">Passo a passo de instalação: <code>docs/SETUP.md</code>. O que cada script faz: <code>docs/SCRIPTS.md</code>. Fluxo Git: <code>GIT.md</code>.</p>
 </header>
 
-<section class="next" id="agora" aria-live="polite">
-  <div class="eyebrow">Faça agora</div>
-  <h2 id="next-title">10 · Entrar no jogo</h2>
-  <p id="next-desc">No Minecraft: Multiplayer, Add Server, e no campo Server Address digite o endereço abaixo. localhost quer dizer: este mesmo Mac.</p>
-  <div class="code"><pre id="next-cmd">localhost</pre><button class="copy" type="button">copiar</button></div>
-</section>
-
-<section id="passos">
-  <div class="progress">
-    <div class="row"><h2>Passos</h2><span class="count" id="count">9 de 12 feitos</span></div>
-    <div class="track"><div id="bar" style="width:75%"></div></div>
-  </div>
-  <p class="src">Marque cada passo quando o "Pronto quando" bater. A marcação fica salva neste navegador.</p>
-
-  <ol class="tasks">
-
-    <li class="task" data-id="jdk" data-default="1">
-      <input type="checkbox" id="t-jdk" aria-labelledby="h-jdk">
-      <div class="head"><span class="num">01</span><h3 id="h-jdk">Instalar JDK 25 e zstd</h3><span class="by">feito</span><span class="time">2 min</span></div>
-      <div class="body">
-        <div class="code"><pre>brew install --cask temurin@25 &amp;&amp; brew install zstd</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b><code>/usr/libexec/java_home -V</code> lista o 25.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="install" data-default="1">
-      <input type="checkbox" id="t-install" aria-labelledby="h-install">
-      <div class="head"><span class="num">02</span><h3 id="h-install">Instalar Minecraft + Fabric</h3><span class="by">feito</span><span class="time">3 min</span></div>
-      <div class="body">
-        <div class="code"><pre>~/Servers/minecraft/scripts/install.sh</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>existe <code>~/Servers/minecraft/server/fabric-server-launch.jar</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="scripts" data-default="1">
-      <input type="checkbox" id="t-scripts" aria-labelledby="h-scripts">
-      <div class="head"><span class="num">03</span><h3 id="h-scripts">Criar scripts e repositório Git</h3><span class="by">feito pelo Claude</span></div>
-      <div class="body"><p>Scripts, .gitignore, hook de segredos, versions.env e mods.txt.</p></div>
-    </li>
-
-    <li class="task" data-id="mods" data-default="1">
-      <input type="checkbox" id="t-mods" aria-labelledby="h-mods">
-      <div class="head"><span class="num">04</span><h3 id="h-mods">Baixar os mods</h3><span class="by">feito pelo Claude</span><span class="time">1 min</span></div>
-      <div class="body">
-        <div class="code"><pre>~/Servers/minecraft/scripts/mods.sh sync</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>o script imprime 7 linhas <code>ok</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="eula" data-default="1"
-        data-next-title="Aceitar a EULA"
-        data-next-desc="Leia a EULA em aka.ms/MinecraftEULA. Se concordar, rode o comando abaixo."
-        data-next-cmd="sed -i '' 's/eula=false/eula=true/' ~/Servers/minecraft/server/eula.txt">
-      <input type="checkbox" id="t-eula" aria-labelledby="h-eula">
-      <div class="head"><span class="num">05</span><h3 id="h-eula">Aceitar a EULA</h3><span class="time">1 min</span></div>
-      <div class="body">
-        <p>Leia em <a href="https://aka.ms/MinecraftEULA">aka.ms/MinecraftEULA</a>. Se concordar:</p>
-        <div class="code"><pre>sed -i '' 's/eula=false/eula=true/' ~/Servers/minecraft/server/eula.txt</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b><code>tail -1 ~/Servers/minecraft/server/eula.txt</code> mostra <code>eula=true</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="env" data-default="1"
-        data-next-title="Gerar as senhas"
-        data-next-desc="Cria o ~/Servers/minecraft/scripts/.env com duas senhas aleatórias, legível só pelo seu usuário."
-        data-next-cmd="(umask 077; printf 'RCON_PASS=%s\nMGMT_SECRET=%s\n' &quot;$(openssl rand -hex 24)&quot; &quot;$(openssl rand -hex 24)&quot; &gt; ~/Servers/minecraft/scripts/.env)">
-      <input type="checkbox" id="t-env" aria-labelledby="h-env">
-      <div class="head"><span class="num">06</span><h3 id="h-env">Gerar as senhas</h3><span class="time">1 min</span></div>
-      <div class="body">
-        <div class="code"><pre>(umask 077; printf 'RCON_PASS=%s\nMGMT_SECRET=%s\n' "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" &gt; ~/Servers/minecraft/scripts/.env)</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b><code>ls -l ~/Servers/minecraft/scripts/.env</code> começa com <code>-rw-------</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="test" data-default="1"
-        data-next-title="Testar no terminal"
-        data-next-desc="Sobe o servidor em primeiro plano. Quando aparecer Done, digite stop e aperte Enter."
-        data-next-cmd="~/Servers/minecraft/scripts/start.sh">
-      <input type="checkbox" id="t-test" aria-labelledby="h-test">
-      <div class="head"><span class="num">07</span><h3 id="h-test">Testar no terminal</h3><span class="time">2 min</span></div>
-      <div class="body">
-        <div class="code"><pre>~/Servers/minecraft/scripts/start.sh</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>aparece <code>Done (…s)!</code>. Depois digite <code>stop</code> e aperte Enter.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="launchd" data-default="1"
-        data-next-title="Ligar em segundo plano"
-        data-next-desc="O launchd passa a cuidar do servidor e reinicia em caso de crash."
-        data-next-cmd="launchctl bootstrap gui/$(id -u) ~/Servers/minecraft/local.minecraft-fabric-server.plist">
-      <input type="checkbox" id="t-launchd" aria-labelledby="h-launchd">
-      <div class="head"><span class="num">08</span><h3 id="h-launchd">Ligar em segundo plano</h3><span class="time">1 min</span></div>
-      <div class="body">
-        <div class="code"><pre>launchctl bootstrap gui/$(id -u) ~/Servers/minecraft/local.minecraft-fabric-server.plist</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>após uns 20 s, <code>~/Servers/minecraft/scripts/rcon.py list</code> responde <code>There are 0 of a max of 20 players online</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="nick" data-default="1"
-        data-next-title="Liberar o seu nick"
-        data-next-desc="Troque SEU_NICK pelo seu nome no Minecraft. A whitelist bloqueia qualquer outro jogador."
-        data-next-cmd="~/Servers/minecraft/scripts/rcon.py &quot;whitelist add SEU_NICK&quot; &quot;op SEU_NICK&quot;">
-      <input type="checkbox" id="t-nick" aria-labelledby="h-nick">
-      <div class="head"><span class="num">09</span><h3 id="h-nick">Liberar o seu nick</h3><span class="time">1 min</span></div>
-      <div class="body">
-        <div class="code"><pre>~/Servers/minecraft/scripts/rcon.py "whitelist add SEU_NICK" "op SEU_NICK"</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>responde <code>Added SEU_NICK to the whitelist</code> e <code>Made SEU_NICK a server operator</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="play"
-        data-next-title="Entrar no jogo"
-        data-next-desc="No Minecraft: Multiplayer, Add Server, e no campo Server Address digite o endereço abaixo. localhost quer dizer: este mesmo Mac."
-        data-next-cmd="localhost">
-      <input type="checkbox" id="t-play" aria-labelledby="h-play">
-      <div class="head"><span class="num">10</span><h3 id="h-play">Entrar no jogo</h3><span class="time">2 min</span></div>
-      <div class="body">
-        <p><b>localhost</b> é o nome que todo computador usa para se referir a si mesmo. O servidor e o jogo estão no mesmo Mac, então o endereço do servidor é <code>localhost</code>. A porta 25565 é a padrão e não precisa ser digitada.</p>
-        <ol class="sub">
-          <li>Abra o Minecraft Launcher e clique em <b>Play</b>. A versão padrão, "Latest release", hoje é a 26.3, a mesma do servidor.</li>
-          <li>No menu do jogo, clique em <b>Multiplayer</b>. Na primeira vez aparece um aviso: clique em <b>Proceed</b>.</li>
-          <li>Clique em <b>Add Server</b>. Em Server Name, digite <code>Meu servidor</code>. Em Server Address, digite <code>localhost</code>. Clique em <b>Done</b>.</li>
-          <li>Selecione o servidor na lista e clique em <b>Join Server</b>.</li>
-        </ol>
-        <p>O Launcher entra aqui porque o servidor só guarda e simula o mundo. Você joga com o Minecraft normal do Launcher, que precisa estar na mesma versão do servidor.</p>
-        <p>Quando sair o 26.4, a "Latest release" atualiza sozinha e deixa de entrar num servidor 26.3. Nessa hora, atualize o servidor ou escolha a 26.3 em Installations.</p>
-        <p class="check"><b>Pronto quando</b>você aparece no mundo. Aperte <kbd>T</kbd>, digite <code>/spark tps</code> e aperte Enter: o MSPT deve ficar abaixo de 25 ms.</p>
-        <p>Para entrar de outro computador na mesma rede, use o IP deste Mac no lugar de <code>localhost</code>. Para descobrir o IP: <code>ipconfig getifaddr en0</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="github"
-        data-next-title="Salvar no GitHub"
-        data-next-desc="Crie o repo privado e vazio minecraft-fabric-server no GitHub (sem README). Troque USUARIO pelo seu usuário. O commit inicial já está feito."
-        data-next-cmd="cd ~/Servers/minecraft &amp;&amp; git remote add origin git@github.com:USUARIO/minecraft-fabric-server.git &amp;&amp; git push -u origin main development">
-      <input type="checkbox" id="t-github" aria-labelledby="h-github">
-      <div class="head"><span class="num">11</span><h3 id="h-github">Salvar no GitHub</h3><span class="time">3 min</span></div>
-      <div class="body">
-        <p>Crie o repo privado e <b>vazio</b> <code>minecraft-fabric-server</code> no GitHub (sem README). O commit inicial já está feito. Troque USUARIO:</p>
-        <div class="code"><pre>cd ~/Servers/minecraft &amp;&amp; git remote add origin git@github.com:USUARIO/minecraft-fabric-server.git &amp;&amp; git push -u origin main development</pre><button class="copy" type="button">copiar</button></div>
-        <p class="check"><b>Pronto quando</b>o GitHub mostra as branches <code>main</code> e <code>development</code>, sem nenhum <code>.jar</code> e sem <code>.env</code>. Depois, em Settings, deixe <code>development</code> como branch padrão e proteja a <code>main</code>.</p>
-      </div>
-    </li>
-
-    <li class="task" data-id="pregen"
-        data-next-title="Pré-gerar o mundo"
-        data-next-desc="Opcional. Gera 140 mil chunks para não travar ao explorar. Fique conectado no jogo enquanto roda: com o servidor vazio por 60 s, ele pausa e a geração para."
-        data-next-cmd="~/Servers/minecraft/scripts/rcon.py &quot;chunky radius 3000&quot; &quot;chunky start&quot;">
-      <input type="checkbox" id="t-pregen" aria-labelledby="h-pregen">
-      <div class="head"><span class="num">12</span><h3 id="h-pregen">Pré-gerar o mundo</h3><span class="opt">opcional</span><span class="time">1 min + 20 a 40 min sozinho</span></div>
-      <div class="body">
-        <div class="code"><pre>~/Servers/minecraft/scripts/rcon.py "chunky radius 3000" "chunky start"</pre><button class="copy" type="button">copiar</button></div>
-        <p>Fique conectado no jogo enquanto roda. Com o servidor vazio por 60 s, ele pausa (<code>pause-when-empty-seconds=60</code>) e a geração para junto.</p>
-        <p class="check"><b>Pronto quando</b><code>~/Servers/minecraft/scripts/rcon.py "chunky progress"</code> mostra 100%.</p>
-      </div>
-    </li>
-  </ol>
-</section>
-
-<section id="dia-a-dia">
-  <h2>Dia a dia</h2>
-  <p class="src">O que cada script faz, em detalhe: <code>docs/SCRIPTS.md</code>.</p>
-  <div class="tbl">
-  <table class="daily">
-    <thead><tr><th>Quero</th><th>Comando</th></tr></thead>
-    <tbody>
-      <tr><td>Ligar</td><td><code>launchctl bootstrap gui/$(id -u) ~/Servers/minecraft/local.minecraft-fabric-server.plist</code></td></tr>
-      <tr><td>Desligar</td><td><code>launchctl bootout gui/$(id -u)/local.minecraft-fabric-server</code></td></tr>
-      <tr><td>Ver o log ao vivo</td><td><code>tail -f ~/Servers/minecraft/server/logs/latest.log</code></td></tr>
-      <tr><td>Rodar um comando</td><td><code>~/Servers/minecraft/scripts/rcon.py "list"</code></td></tr>
-      <tr><td>Fazer backup</td><td><code>~/Servers/minecraft/scripts/backup.sh</code> (com o servidor ligado)</td></tr>
-      <tr><td>Atualizar mods</td><td><code>~/Servers/minecraft/scripts/mods.sh update</code>, revisar <code>git -C ~/Servers/minecraft diff mods.lock</code>, depois <code>~/Servers/minecraft/scripts/mods.sh sync</code> e reiniciar</td></tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="glossario">
-  <h2>Termos usados aqui</h2>
-  <div class="tbl">
-  <table class="daily">
-    <thead><tr><th>Termo</th><th>Significado</th></tr></thead>
-    <tbody>
-      <tr><td>localhost</td><td>Este mesmo computador. É o endereço que o jogo usa quando o servidor está no mesmo Mac.</td></tr>
-      <tr><td>Porta 25565</td><td>A "porta de entrada" do servidor para o jogo. A 25575 é a do RCON.</td></tr>
-      <tr><td>RCON</td><td>Canal para mandar comandos ao servidor sem estar dentro do jogo. É o que o <code>rcon.py</code> usa.</td></tr>
-      <tr><td>launchd</td><td>O gerenciador de serviços do macOS. Mantém o servidor ligado em segundo plano e religa se ele cair.</td></tr>
-      <tr><td>MSPT</td><td>Milissegundos por tick. O jogo roda 20 ticks por segundo, então o limite é 50 ms. Acima disso, o jogo fica lento.</td></tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<div class="divider">
-  <div class="eyebrow">Referência</div>
-  <h2>Como funciona</h2>
-  <p class="src">Não precisa ler para jogar. Serve para entender e manter.</p>
-</div>
 <section id="arquitetura">
   <h2>Arquitetura</h2>
   <div class="diagram" role="img" aria-label="Diagrama de arquitetura: clientes conectam por TCP 25565 a um processo Java que contém mods, servidor Minecraft, Fabric Loader e JVM Temurin 25; o processo é supervisionado por launchd no macOS; à esquerda o plano de controle por RCON e scripts; à direita o armazenamento do mundo, mods e backups.">
@@ -506,7 +275,9 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
     <span><i class="sw d"></i>snapshot do mundo para backup</span>
     <span><i class="sw p"></i>limite do processo java</span>
   </div>
-</section><section id="stack">
+</section>
+
+<section id="stack">
   <h2>Stack</h2>
   <div class="tbl">
   <table>
@@ -527,7 +298,9 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
   </table>
   </div>
   <p class="src">Versões consultadas em 27/09/2026 nas APIs Fabric Meta, Modrinth e no manifesto da Mojang. Os alphas de C2ME e ScalableLux são as únicas builds para 26.3.</p>
-</section><section id="memoria">
+</section>
+
+<section id="memoria">
   <h2>Orçamento de memória</h2>
   <p>Cenário mais exigente: você joga no mesmo Mac que roda o servidor. O heap fica fixo em 6 GB; C2ME e ZGC gostam de folga, e sobra espaço para cache de arquivos do macOS.</p>
   <div class="mem">
@@ -549,6 +322,7 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
   </div>
   <p class="src">Se o servidor rodar sozinho, suba para <code>MC_HEAP=8G</code>. Acima disso o ganho é nulo para poucos jogadores e o ZGC só varre mais memória.</p>
 </section>
+
 <section id="decisoes">
   <h2>Decisões técnicas</h2>
   <div class="grid2">
@@ -573,7 +347,7 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
         <li>local.minecraft-fabric-server.plist <span class="n">job do launchd</span></li>
         <li>ARCHITETURE.html, GIT.md <span class="n">documentação</span></li>
         <li><span class="d">docs/</span>
-          <ul><li>SCRIPTS.md <span class="n">o que cada script faz</span></li></ul>
+          <ul><li>SETUP.md <span class="n">passo a passo de instalação</span></li><li>SCRIPTS.md <span class="n">o que cada script faz</span></li></ul>
         </li>
         <li>.gitmessage, <span class="d">.githooks/</span> <span class="n">padrão de commit e barreira de segredos</span></li>
         <li><span class="d">scripts/</span>
@@ -600,55 +374,23 @@ kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line);border-
   </div>
 </section>
 
-<footer>Tudo roda na sua conta de usuário, sem sudo. As portas 25565 e 25575 só ficam visíveis na rede local; não abra nada no roteador.</footer>
+<section id="glossario">
+  <h2>Termos usados aqui</h2>
+  <div class="tbl">
+  <table class="daily">
+    <thead><tr><th>Termo</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td>localhost</td><td>Este mesmo computador. É o endereço que o jogo usa quando o servidor está no mesmo Mac.</td></tr>
+      <tr><td>Porta 25565</td><td>A "porta de entrada" do servidor para o jogo. A 25575 é a do RCON.</td></tr>
+      <tr><td>RCON</td><td>Canal para mandar comandos ao servidor sem estar dentro do jogo. É o que o <code>rcon.py</code> usa.</td></tr>
+      <tr><td>launchd</td><td>O gerenciador de serviços do macOS. Mantém o servidor ligado em segundo plano e religa se ele cair.</td></tr>
+      <tr><td>MSPT</td><td>Milissegundos por tick. O jogo roda 20 ticks por segundo, então o limite é 50 ms. Acima disso, o jogo fica lento.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>Tudo roda na sua conta de usuário, sem sudo. As portas 25565 e 25575 só ficam visíveis na rede local; nada é aberto no roteador.</footer>
 </div>
-
-<script>
-(function(){
-  var KEY = 'fabric-m5-steps';
-  var saved = null;
-  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e) {}
-  var tasks = Array.prototype.slice.call(document.querySelectorAll('.task'));
-
-  tasks.forEach(function(t){
-    var box = t.querySelector('input');
-    var id = t.dataset.id;
-    box.checked = saved && id in saved ? saved[id] : t.dataset.default === '1';
-    box.addEventListener('change', render);
-  });
-
-  function render(){
-    var state = {}, done = 0, next = null;
-    tasks.forEach(function(t){
-      var on = t.querySelector('input').checked;
-      state[t.dataset.id] = on;
-      t.classList.toggle('done', on);
-      if (on) done++; else if (!next && t.dataset.nextTitle) next = t;
-    });
-    document.getElementById('count').textContent = done + ' de ' + tasks.length + ' feitos';
-    document.getElementById('bar').style.width = Math.round(done / tasks.length * 100) + '%';
-    var box = document.getElementById('agora');
-    if (next) {
-      box.hidden = false;
-      document.getElementById('next-title').textContent = next.querySelector('.num').textContent + ' · ' + next.dataset.nextTitle;
-      document.getElementById('next-desc').textContent = next.dataset.nextDesc;
-      document.getElementById('next-cmd').textContent = next.dataset.nextCmd;
-    } else {
-      box.hidden = true;
-    }
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
-  }
-  render();
-
-  document.querySelectorAll('.copy').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var pre = btn.parentElement.querySelector('pre');
-      var done = function(){ btn.textContent = 'copiado'; setTimeout(function(){ btn.textContent = 'copiar'; }, 1400); };
-      var fallback = function(){ var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'selecionado'; };
-      try { navigator.clipboard.writeText(pre.innerText).then(done, fallback); } catch(e){ fallback(); }
-    });
-  });
-})();
-</script>
 </body>
 </html>
