@@ -82,10 +82,10 @@ sed -i '' 's/eula=false/eula=true/' ~/Servers/minecraft/server/eula.txt
 
 ## 10. Save to GitHub · 3 min
 
-Create the private, **empty** repo `minecraft-fabric-server` on GitHub (no README). Replace `USERNAME`:
+Create the private, **empty** repo `spawnpoint` on GitHub (no README). Replace `USERNAME`:
 
 ```bash
-cd ~/Servers/minecraft && git remote add origin git@github.com:USERNAME/minecraft-fabric-server.git && git push -u origin --all
+cd ~/Servers/minecraft && git remote add origin git@github.com:USERNAME/spawnpoint.git && git push -u origin --all
 ```
 
 **Done when:** GitHub shows the branches, with no `.jar` and no `.env`. Then, in Settings, set `development` as the default branch and protect `main`.
@@ -105,7 +105,7 @@ Stay connected in the game while it runs. With the server empty for 60 s, it pau
 After step 1, instead of steps 2 to 5:
 
 ```bash
-git clone git@github.com:USERNAME/minecraft-fabric-server.git ~/Servers/minecraft
+git clone git@github.com:USERNAME/spawnpoint.git ~/Servers/minecraft
 cd ~/Servers/minecraft
 git config core.hooksPath .githooks
 git config commit.template .gitmessage

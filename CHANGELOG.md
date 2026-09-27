@@ -37,5 +37,5 @@ First release. Fabric server running natively on macOS, with friends joining thr
 
 - `server/whitelist.json`, `server/ops.json` and the Mac's Tailscale IP removed from the repository; `pre-commit` blocks both JSONs
 
-[Unreleased]: https://github.com/Nic-Soares/minecraft-fabric-server/compare/v0.1.0...development
-[0.1.0]: https://github.com/Nic-Soares/minecraft-fabric-server/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Nic-Soares/spawnpoint/compare/v0.1.0...development
+[0.1.0]: https://github.com/Nic-Soares/spawnpoint/releases/tag/v0.1.0
