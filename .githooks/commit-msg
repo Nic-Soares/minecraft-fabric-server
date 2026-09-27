@@ -26,8 +26,6 @@ for n, line in enumerate(lines[2:], start=3):
         continue  # trailers e URLs
     if len(line) > 74:
         errors.append(f"linha {n} tem {len(line)} caracteres (máximo 74)")
-if not any(l.startswith("Signed-off-by: ") for l in lines):
-    errors.append("falta o trailer Signed-off-by")
 
 for e in errors:
     print(f"commit-msg: {e}", file=sys.stderr)

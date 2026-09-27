@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# Adiciona o Signed-off-by do autor, se ainda não existir.
-set -euo pipefail
-msg="$1"
-sob="Signed-off-by: $(git config user.name) <$(git config user.email)>"
-git interpret-trailers --in-place --if-exists doNothing --trailer "$sob" "$msg"
