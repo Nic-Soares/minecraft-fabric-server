@@ -1,5 +1,7 @@
 # Scripts
 
+Comandos do dia a dia (ligar, desligar, logs, jogadores): `docs/OPERACAO.md`.
+
 Tudo em `scripts/` é executável e funciona de qualquer pasta. Os `.sh` são scripts de shell (bash); o `.py` é Python 3 e usa só a biblioteca padrão.
 
 ## Qual usar
