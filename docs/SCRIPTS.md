@@ -1,61 +1,61 @@
 # Scripts
 
-Comandos do dia a dia (ligar, desligar, logs, jogadores): `docs/OPERACAO.md`.
+Day-to-day commands (start, stop, logs, players): `docs/OPERATIONS.md`.
 
-Tudo em `scripts/` é executável e funciona de qualquer pasta. Os `.sh` são scripts de shell (bash); o `.py` é Python 3 e usa só a biblioteca padrão.
+Everything in `scripts/` is executable and works from any folder. The `.sh` files are shell scripts (bash); the `.py` is Python 3 and uses only the standard library.
 
-## Qual usar
+## Which one to use
 
-| Quero | Script | Precisa do servidor ligado? |
+| I want to | Script | Needs the server running? |
 |---|---|---|
-| Instalar ou reinstalar Minecraft + Fabric | `install.sh` | Não (desligue antes) |
-| Ligar, desligar ou reiniciar em segundo plano | `service.sh` | Não |
-| Ligar o servidor no terminal (teste) | `start.sh` | Não |
-| Baixar os mods do `mods.lock` | `mods.sh sync` | Não (desligue antes) |
-| Procurar versões novas dos mods | `mods.sh update` | Não |
-| Mandar um comando ao servidor | `rcon.py` | Sim |
-| Fazer backup do mundo | `backup.sh` | Sim |
+| Install or reinstall Minecraft + Fabric | `install.sh` | No (stop it first) |
+| Start, stop, or restart in the background | `service.sh` | No |
+| Start the server in the terminal (test) | `start.sh` | No |
+| Download the mods from `mods.lock` | `mods.sh sync` | No (stop it first) |
+| Look for new mod versions | `mods.sh update` | No |
+| Send a command to the server | `rcon.py` | Yes |
+| Back up the world | `backup.sh` | Yes |
 
-`lib.sh` não é rodado direto; os outros scripts o carregam.
+`lib.sh` is not run directly; the other scripts source it.
 
 ---
 
 ## install.sh
 
-**O que faz:** baixa o Fabric Installer e instala o servidor Minecraft com o Fabric Loader dentro de `server/`.
+**What it does:** downloads the Fabric Installer and installs the Minecraft server with Fabric Loader inside `server/`.
 
 ```bash
 ~/Servers/minecraft/scripts/install.sh
 ```
 
-- **Lê:** `versions.env` (`MC_VERSION`, `LOADER_VERSION`, `INSTALLER_VERSION`).
-- **Cria ou altera:** `server/fabric-server-launch.jar`, `server/server.jar`, `server/libraries/`, `server/versions/`.
-- **Não mexe em:** mundo, mods, configs.
-- **Quando usar:** na primeira instalação e ao subir de versão do jogo ou do loader.
+- **Reads:** `versions.env` (`MC_VERSION`, `LOADER_VERSION`, `INSTALLER_VERSION`).
+- **Creates or changes:** `server/fabric-server-launch.jar`, `server/server.jar`, `server/libraries/`, `server/versions/`.
+- **Does not touch:** world, mods, configs.
+- **When to use:** on the first install and when upgrading the game or loader version.
 
 ## start.sh
 
-**O que faz:** monta o `server.properties` e sobe a JVM com as flags de desempenho.
+**What it does:** builds `server.properties` and starts the JVM with the performance flags.
 
 ```bash
 ~/Servers/minecraft/scripts/start.sh
 ```
 
-Em ordem:
+In order:
 
-1. Carrega `versions.env` e as senhas de `scripts/.env`.
-2. Localiza o JDK 25. Se ele não existir, para com erro (em vez de usar outro Java em silêncio).
-3. Gera `server/server.properties` juntando `server.properties.base` com `rcon.password` e `management-server-secret`.
-4. Liga o `caffeinate` preso ao processo, para o Mac não dormir enquanto o servidor roda.
-5. Substitui a si mesmo pela JVM (`exec`), então o launchd controla o Java diretamente.
+1. Loads `versions.env` and the passwords from `scripts/.env`.
+2. Finds JDK 25. If it does not exist, stops with an error (instead of silently using another Java).
+3. Generates `server/server.properties` by merging `server.properties.base` with `rcon.password` and `management-server-secret`.
+4. Starts `caffeinate` tied to the process, so the Mac does not sleep while the server runs.
+5. Replaces itself with the JVM (`exec`), so launchd controls Java directly.
 
-- **Heap:** 6 GB por padrão. Para mudar: `MC_HEAP=8G ~/Servers/minecraft/scripts/start.sh`.
-- **No terminal:** fica em primeiro plano. Para parar, digite `stop` e aperte Enter, ou use Ctrl+C; os dois salvam o mundo.
-- **Em segundo plano:** o `service.sh` faz o launchd rodar este mesmo script.
+- **Heap:** 6 GB by default. To change it: `MC_HEAP=8G ~/Servers/minecraft/scripts/start.sh`.
+- **In the terminal:** stays in the foreground. To stop, type `stop` and press Enter, or use Ctrl+C; both save the world.
+- **In the background:** `service.sh` makes launchd run this same script.
 
 ## service.sh
 
-**O que faz:** liga, desliga e reinicia o servidor em segundo plano pelo launchd, o gerenciador de serviços do macOS.
+**What it does:** starts, stops, and restarts the server in the background through launchd, the macOS service manager.
 
 ```bash
 ~/Servers/minecraft/scripts/service.sh start
@@ -64,15 +64,15 @@ Em ordem:
 ~/Servers/minecraft/scripts/service.sh status
 ```
 
-- **`start`:** gera `launchd/minecraft.plist` a partir de `launchd/minecraft.plist.template`, trocando `__ROOT__` pelo caminho do projeto, e registra o job `local.minecraft-fabric-server`. O launchd roda o `start.sh` e o religa se ele cair.
-- **`stop`:** tira o job do launchd, que manda SIGTERM ao Java; o servidor salva o mundo e sai. O script só volta depois disso.
-- **`status`:** mostra `state = running` e o `pid`, ou `state = desligado`.
-- **Por que um modelo:** o launchd não expande `~` nem variáveis dentro do plist. O modelo versionado não tem caminho nem nome de usuário; o plist gerado, com o caminho real, fica fora do Git.
-- **Não liga sozinho no login:** o plist fica no projeto, e não em `~/Library/LaunchAgents`.
+- **`start`:** generates `launchd/minecraft.plist` from `launchd/minecraft.plist.template`, replacing `__ROOT__` with the project path, and registers the `local.minecraft-fabric-server` job. launchd runs `start.sh` and restarts it if it goes down.
+- **`stop`:** removes the job from launchd, which sends SIGTERM to Java; the server saves the world and exits. The script only returns after that.
+- **`status`:** shows `state = running` and the `pid`, or `state = stopped`.
+- **Why a template:** launchd does not expand `~` or variables inside the plist. The versioned template has no path or username; the generated plist, with the real path, is kept out of Git.
+- **Does not start on its own at login:** the plist lives in the project, not in `~/Library/LaunchAgents`.
 
 ## mods.sh
 
-**O que faz:** mantém `server/mods/` igual ao `mods.lock`. Tem dois subcomandos.
+**What it does:** keeps `server/mods/` matching `mods.lock`. It has two subcommands.
 
 ### mods.sh update
 
@@ -80,10 +80,10 @@ Em ordem:
 ~/Servers/minecraft/scripts/mods.sh update
 ```
 
-- Para cada slug do `mods.txt`, consulta o Modrinth e pega a build Fabric mais recente para `MC_VERSION`.
-- Reescreve o `mods.lock` com versão, arquivo, sha512 e URL.
-- **Não baixa nada.** Só atualiza o lock para você revisar com `git -C ~/Servers/minecraft diff mods.lock`.
-- Falha se algum mod não tiver build para a versão do jogo.
+- For each slug in `mods.txt`, queries Modrinth and takes the latest Fabric build for `MC_VERSION`.
+- Rewrites `mods.lock` with version, file, sha512, and URL.
+- **Downloads nothing.** It only updates the lock for you to review with `git -C ~/Servers/minecraft diff mods.lock`.
+- Fails if any mod has no build for the game version.
 
 ### mods.sh sync
 
@@ -91,59 +91,59 @@ Em ordem:
 ~/Servers/minecraft/scripts/mods.sh sync
 ```
 
-- Baixa exatamente o que está no `mods.lock` e verifica o sha512 de cada arquivo.
-- Baixa primeiro em `server/.mods.new` e só troca `server/mods/` no fim. Se um download falhar, os mods atuais continuam intactos.
-- **Apaga** qualquer arquivo em `server/mods/` que não esteja no lock.
+- Downloads exactly what is in `mods.lock` and verifies the sha512 of each file.
+- Downloads first into `server/.mods.new` and only swaps `server/mods/` at the end. If a download fails, the current mods stay intact.
+- **Deletes** any file in `server/mods/` that is not in the lock.
 
 ## rcon.py
 
-**O que faz:** manda comandos ao servidor ligado pelo RCON (porta 25575), sem precisar estar no jogo.
+**What it does:** sends commands to the running server over RCON (port 25575), without needing to be in the game.
 
 ```bash
 ~/Servers/minecraft/scripts/rcon.py "list"
 ~/Servers/minecraft/scripts/rcon.py "whitelist add NICK" "op NICK"
 ```
 
-- Cada argumento entre aspas é um comando, executado em ordem.
-- Os comandos são os mesmos do console, sem a `/` inicial.
-- Lê a senha de `scripts/.env` sozinho.
-- **Erros comuns:**
-  - `servidor desligado ou RCON desativado`: o servidor não está rodando.
-  - `senha recusada`: o `.env` mudou depois do boot. Reinicie o servidor.
+- Each quoted argument is one command, run in order.
+- The commands are the same as in the console, without the leading `/`.
+- Reads the password from `scripts/.env` on its own.
+- **Common errors:**
+  - `server stopped or RCON disabled`: the server is not running.
+  - `password rejected`: `.env` changed after boot. Restart the server.
 
 ## backup.sh
 
-**O que faz:** salva um snapshot consistente do mundo com o servidor ligado.
+**What it does:** saves a consistent snapshot of the world with the server running.
 
 ```bash
 ~/Servers/minecraft/scripts/backup.sh
 ```
 
-1. Pelo RCON, desliga a gravação automática (`save-off`) e força salvar tudo em disco (`save-all flush`).
-2. Compacta `server/world/` com zstd em `backups/world-AAAA-MM-DD-HHMM-<commit>.tar.zst`.
-3. Religa a gravação (`save-on`), mesmo se a compactação falhar.
+1. Over RCON, turns off automatic saving (`save-off`) and forces everything to be saved to disk (`save-all flush`).
+2. Compresses `server/world/` with zstd into `backups/world-YYYY-MM-DD-HHMM-<commit>.tar.zst`.
+3. Turns saving back on (`save-on`), even if compression fails.
 
-- O hash do commit no nome mostra com qual versão da stack aquele mundo rodava.
-- **Restaurar** (com o servidor desligado): `zstd -dc ARQUIVO.tar.zst | tar -xf - -C ~/Servers/minecraft/server`.
+- The commit hash in the name shows which version of the stack that world was running on.
+- **Restore** (with the server stopped): `zstd -dc FILE.tar.zst | tar -xf - -C ~/Servers/minecraft/server`.
 
 ## lib.sh
 
-**O que faz:** reúne as funções comuns dos outros scripts. Não é executado direto.
+**What it does:** gathers the functions shared by the other scripts. It is not run directly.
 
-| Função ou variável | Uso |
+| Function or variable | Use |
 |---|---|
-| `ROOT` | Caminho absoluto do projeto |
-| `versions.env` | Carregado automaticamente |
-| `java_bin` | Devolve o caminho do JDK de `JAVA_VERSION`, ou falha com a instrução de instalação |
-| `load_env` | Carrega `scripts/.env`, ou falha dizendo como criar |
+| `ROOT` | Absolute path of the project |
+| `versions.env` | Loaded automatically |
+| `java_bin` | Returns the path of the `JAVA_VERSION` JDK, or fails with the install instruction |
+| `load_env` | Loads `scripts/.env`, or fails saying how to create it |
 
 ---
 
-## Arquivos de apoio
+## Supporting files
 
-| Arquivo | Papel |
+| File | Role |
 |---|---|
-| `scripts/.env` | Senhas (`RCON_PASS`, `MGMT_SECRET`). Fora do Git, permissão 600. |
-| `scripts/.env.example` | Modelo do `.env`, versionado e sem valores. |
-| `launchd/minecraft.plist.template` | Modelo versionado do job do launchd, sem caminhos pessoais. |
-| `launchd/minecraft.plist` | Job gerado pelo `service.sh`. Fora do Git. |
+| `scripts/.env` | Passwords (`RCON_PASS`, `MGMT_SECRET`). Out of Git, permission 600. |
+| `scripts/.env.example` | `.env` template, versioned and without values. |
+| `launchd/minecraft.plist.template` | Versioned launchd job template, without personal paths. |
+| `launchd/minecraft.plist` | Job generated by `service.sh`. Out of Git. |

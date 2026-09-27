@@ -1,10 +1,10 @@
-# <escopo>: <resumo em uma linha, idealmente até 50 caracteres>
+# <scope>: <one-line summary in English, ideally up to 50 characters>
 #
-# Corpo: explique o que muda e por quê, com contexto do problema.
-# Quebre as linhas em até 72 caracteres. Pode ter vários parágrafos.
+# Body: explain what changes and why, with context on the problem.
+# Wrap lines at 72 characters. May have several paragraphs.
 #
-# Trailer opcional:
-# Reported-by: Nome <email>
+# Optional trailer:
+# Reported-by: Name <email>
 #
-# Escopos: config, mods, jvm, scripts, docs, git
-# Linhas que começam com # são descartadas.
+# Scopes: config, mods, jvm, scripts, docs, git
+# Lines starting with # are discarded.

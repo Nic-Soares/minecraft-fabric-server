@@ -1,16 +1,16 @@
 # Changelog
 
-Mudanças de cada release. Formato baseado no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/); versões seguem [SemVer](https://semver.org/lang/pt-BR/) com as regras do [docs/GIT.md](docs/GIT.md#versões-e-releases).
+Changes in each release. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/) with the rules in [docs/GIT.md](docs/GIT.md#versions-and-releases).
 
-## [Não lançado]
+## [Unreleased]
 
 ## [0.1.0] - 2026-09-27
 
-Primeira release. Servidor Fabric rodando nativo no macOS, com amigos entrando pelo Tailscale.
+First release. Fabric server running natively on macOS, with friends joining through Tailscale.
 
 ### Stack
 
-| Componente | Versão |
+| Component | Version |
 |---|---|
 | JDK (Temurin) | 25 |
 | Minecraft | 26.3 |
@@ -18,24 +18,24 @@ Primeira release. Servidor Fabric rodando nativo no macOS, com amigos entrando p
 | Fabric Installer | 1.1.2 |
 | Mods (`mods.lock`) | fabric-api, lithium, ferrite-core, c2me-fabric, scalablelux, spark, chunky |
 
-### Adicionado
+### Added
 
-- Stack fixada em `versions.env` e mods resolvidos em `mods.lock` com sha512 (`scripts/mods.sh update|sync`)
-- `scripts/install.sh`, `start.sh`, `backup.sh`, `rcon.py` e `lib.sh`; o `start.sh` gera o `server.properties` a partir do `.base` e dos segredos do `scripts/.env`
-- `scripts/service.sh`, que gera o job do launchd a partir de `launchd/minecraft.plist.template`
-- Conexão de jogadores externos via Tailscale, com o modelo de política em `network/tailscale-policy.example.hujson`
-- Padrão de mensagem de commit com `.gitmessage` e hooks `pre-commit` e `commit-msg`
-- Documentação em `docs/`: arquitetura e stack com diagramas Mermaid, setup, scripts, operação, multiplayer e Git
+- Stack pinned in `versions.env` and mods resolved in `mods.lock` with sha512 (`scripts/mods.sh update|sync`)
+- `scripts/install.sh`, `start.sh`, `backup.sh`, `rcon.py` and `lib.sh`; `start.sh` generates `server.properties` from `.base` and the secrets in `scripts/.env`
+- `scripts/service.sh`, which generates the launchd job from `launchd/minecraft.plist.template`
+- External player connections through Tailscale, with the policy template in `network/tailscale-policy.example.hujson`
+- Commit message convention with `.gitmessage` and `pre-commit` and `commit-msg` hooks
+- Documentation in English in `docs/`: architecture and stack with Mermaid diagrams, setup, scripts, operations, multiplayer and Git
 
-### Corrigido
+### Fixed
 
-- Política do Tailscale: amigos de compartilhamento não alcançavam a porta 25565
-- Política do Tailscale: aviso de valor inválido no console
-- Docs: IP fixo da rede local trocado pelo comando que o descobre
+- Tailscale policy: sharing friends could not reach port 25565
+- Tailscale policy: invalid value warning in the console
+- Docs: hardcoded local network IP replaced with the command that finds it
 
-### Segurança
+### Security
 
-- `server/whitelist.json`, `server/ops.json` e o IP Tailscale do Mac saem do repositório; o `pre-commit` bloqueia os dois JSONs
+- `server/whitelist.json`, `server/ops.json` and the Mac's Tailscale IP removed from the repository; `pre-commit` blocks both JSONs
 
-[Não lançado]: https://github.com/Nic-Soares/minecraft-fabric-server/compare/v0.1.0...development
+[Unreleased]: https://github.com/Nic-Soares/minecraft-fabric-server/compare/v0.1.0...development
 [0.1.0]: https://github.com/Nic-Soares/minecraft-fabric-server/releases/tag/v0.1.0

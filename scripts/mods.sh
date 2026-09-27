@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Uso:
-#   scripts/mods.sh update   resolve a última build de cada slug do mods.txt e reescreve o mods.lock
-#   scripts/mods.sh sync     instala exatamente o mods.lock em server/mods, verificando o sha512
+# Usage:
+#   scripts/mods.sh update   resolves the latest build of each slug in mods.txt and rewrites mods.lock
+#   scripts/mods.sh sync     installs exactly mods.lock into server/mods, verifying the sha512
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
 LOCK="$ROOT/mods.lock"
@@ -19,30 +19,30 @@ update() {
 import json, os, sys
 vs = json.load(sys.stdin)
 if not vs:
-    sys.exit(os.environ["SLUG"] + ": sem build Fabric para " + os.environ["MC"])
+    sys.exit(os.environ["SLUG"] + ": no Fabric build for " + os.environ["MC"])
 v = vs[0]; fs = v["files"]; f = next((x for x in fs if x["primary"]), fs[0])
 print("\t".join([os.environ["SLUG"], v["version_number"], f["filename"], f["hashes"]["sha512"], f["url"]]))'
   done >> "$tmp"
   cp "$tmp" "$LOCK"
-  echo "mods.lock atualizado. Revise com: git diff mods.lock"
+  echo "mods.lock updated. Review with: git diff mods.lock"
 }
 
 sync() {
-  [[ -f "$LOCK" ]] || { echo "mods.lock não existe. Rode: scripts/mods.sh update" >&2; exit 1; }
+  [[ -f "$LOCK" ]] || { echo "mods.lock does not exist. Run: scripts/mods.sh update" >&2; exit 1; }
   local stage="$ROOT/server/.mods.new"
   rm -rf "$stage"; mkdir -p "$stage"
   tail -n +2 "$LOCK" | while IFS=$'\t' read -r slug version file sha url; do
     curl -fsSL -A "$UA" -o "$stage/$file" "$url"
     echo "$sha  $stage/$file" | shasum -a 512 -c --status - \
-      || { echo "$slug: sha512 não confere" >&2; exit 1; }
+      || { echo "$slug: sha512 mismatch" >&2; exit 1; }
     echo "ok  $slug $version"
   done
   rm -rf "$DEST"; mv "$stage" "$DEST"
-  echo "server/mods sincronizado com o mods.lock"
+  echo "server/mods synced with mods.lock"
 }
 
 case "${1:-}" in
   update) update ;;
   sync)   sync ;;
-  *) echo "Uso: $0 update | sync" >&2; exit 2 ;;
+  *) echo "Usage: $0 update | sync" >&2; exit 2 ;;
 esac

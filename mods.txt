@@ -1,4 +1,4 @@
-# Intenção: um slug do Modrinth por linha. O resolvido fica em mods.lock.
+# Intent: one Modrinth slug per line. The resolved result lives in mods.lock.
 fabric-api
 lithium
 ferrite-core
