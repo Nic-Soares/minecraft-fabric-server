@@ -42,8 +42,10 @@ Abra o Tailscale pelo Launchpad e faça login. A conta que você usar vira a don
 ### 3. Aplicar a política de acesso
 
 1. Confira que o IP em `network/tailscale-policy.hujson` é o do passo 2.
-2. Abra https://login.tailscale.com/admin/acls, apague o conteúdo e cole o arquivo inteiro.
-3. Clique em **Save**.
+2. Copie o arquivo: `pbcopy < ~/Servers/minecraft/network/tailscale-policy.hujson`
+3. Abra https://login.tailscale.com/admin/acls e clique na aba **JSON editor**. A página abre no **Visual editor**, que não aceita colar texto.
+4. Clique dentro do texto, aperte `Cmd+A` e depois `Cmd+V`.
+5. Clique em **Save**.
 
 **Pronto quando:** o console salva sem erro. Se ele recusar, a mensagem diz a linha com problema.
 
